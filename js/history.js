@@ -128,9 +128,58 @@ window.carregarHistorico = carregarHistorico;
    02 - ABRIR DETALHES DA COMPRA
    ========================================================== */
 
-   console.log("ABRINDO COMPRA:", compraId);
+function escapeHistoryHtml(value) {
+    const element = document.createElement("div");
+    element.textContent = value ?? "";
+    return element.innerHTML;
+}
+
+function formatHistoryQuantity(value) {
+    return new Intl.NumberFormat("pt-BR", {
+        maximumFractionDigits: 3
+    }).format(value);
+}
+
+function getHistoryCartQuantity(item) {
+    const savedQuantity = Number(item.quantidade_itens);
+
+    if (Number.isInteger(savedQuantity) && savedQuantity > 0) {
+        return savedQuantity;
+    }
+
+    // Compras anteriores não armazenavam a quantidade de embalagens em
+    // compra_itens. Como o subtotal é preço unitário × itens, ela pode ser
+    // reconstruída sem alterar o histórico já salvo.
+    const unitPrice = Number(item.preco_unitario);
+    const subtotal = Number(item.preco_total);
+
+    if (Number.isFinite(unitPrice) && unitPrice > 0 && Number.isFinite(subtotal)) {
+        return Math.max(1, Math.round(subtotal / unitPrice));
+    }
+
+    return 1;
+}
+
+function getHistoryMeasureLabel(item, cartQuantity) {
+    const totalMeasure = Number(item.quantidade);
+    const measurePerItem =
+        Number.isFinite(totalMeasure) && totalMeasure > 0
+            ? totalMeasure / cartQuantity
+            : 1;
+    const unit = String(item.unidade || "un").toLowerCase();
+
+    if (unit === "un") {
+        return `${formatHistoryQuantity(measurePerItem)} ${
+            measurePerItem === 1 ? "unidade" : "unidades"
+        }`;
+    }
+
+    return `${formatHistoryQuantity(measurePerItem)} ${unit === "l" ? "L" : unit}`;
+}
 
 async function openPurchaseDetails(compraId, numeroCompra) {
+
+    console.log("ABRINDO COMPRA:", compraId);
 
 
     const titulo =
@@ -221,33 +270,34 @@ console.log("ERRO ITENS:", erroItens);
     mercado.innerHTML =
     `🏪 ${compra.supermercados?.nome || "Mercado não informado"}`;
 
-   itens.forEach(item => {
+   (itens || []).forEach(item => {
+
+    const cartQuantity = getHistoryCartQuantity(item);
+    const subtotal = Number(item.preco_total || 0);
+    const savedUnitPrice = Number(item.preco_unitario);
+    const hasSavedUnitPrice =
+        item.preco_unitario !== null &&
+        item.preco_unitario !== undefined &&
+        Number.isFinite(savedUnitPrice) &&
+        savedUnitPrice >= 0;
+    const unitPrice = hasSavedUnitPrice
+        ? savedUnitPrice
+        : subtotal / cartQuantity;
 
     lista.innerHTML += `
-
-        <li class="cart-item">
-
-            <div>
-
-                <strong>
-                    ${item.nome}
-                </strong>
-
-                <p>
-                    ${item.quantidade} ${item.unidade}
-                </p>
-
+        <li class="history-product-card">
+            <div class="history-item-top">
+                <div class="history-item-description">
+                    <span class="history-item-measure">${getHistoryMeasureLabel(item, cartQuantity)} por item</span>
+                    <strong>${escapeHistoryHtml(item.nome)}</strong>
+                </div>
             </div>
 
-            <strong>
-                R$ ${Number(item.preco_total)
-                    .toFixed(2)
-                    .replace(".", ",")}
-            </strong>
-
-        </li>
-
-    `;
+            <div class="history-item-pricing">
+                <span>${cartQuantity} ${cartQuantity === 1 ? "unidade" : "unidades"} × ${formatCurrency(unitPrice)}</span>
+                <strong>${formatCurrency(subtotal)}</strong>
+            </div>
+        </li>`;
 
 });
 
