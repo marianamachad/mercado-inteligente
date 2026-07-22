@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mercado Inteligente</title>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Mercado Inteligente">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="manifest" href="./manifest.json">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+
+    <div class="app-layout">
+
+        <!-- ========================================= -->
+        <!-- CABEÇALHO -->
+        <!-- ========================================= -->
+
+        <header class="main-header">
+            <h1>🛒 Mercado Inteligente</h1>
+        </header>
+
+        <!-- ========================================= -->
+        <!-- AUTENTICAÇÃO -->
+        <!-- ========================================= -->
+
+        <!-- Cadastro -->
+        <section id="screen-register">
+
+            <div class="card auth-card">
+
+                <h2>✨ Criar Conta</h2>
+
+                <p class="auth-subtitle">
+                    Cadastre-se para começar a economizar nos mercados.
+                </p>
+
+                <label>Nome Completo</label>
+                <input
+                    id="reg-name"
+                    type="text"
+                    placeholder="Ex: Maria Silva">
+
+                <label>E-mail</label>
+                <input
+                    id="reg-email"
+                    type="email"
+                    placeholder="seuemail@provedor.com">
+
+                <label>Senha</label>
+                <input
+                    id="reg-password"
+                    type="password"
+                    placeholder="Crie uma senha segura">
+
+                <button
+
+                    onclick="handleAuthAction('cadastro')"
+                    style="margin-top:25px">
+
+                    Criar Minha Conta
+
+                </button>
+
+                <div class="divider">
+                    ou
+                </div>
+
+                <button
+                    class="btn-google"
+                    onclick="loginWithGoogle()">
+
+                    <span class="google-icon">🌐</span>
+
+                    Cadastrar com Google
+
+                </button>
+
+                <p class="auth-switch-text">
+
+                    Já tem login?
+
+                    <a onclick="navigateTo('screen-login')" href="#">
+
+                        Entre aqui
+
+                    </a>
+
+                </p>
+
+            </div>
+
+        </section>
+
+        <!-- Login -->
+        <section id="screen-login" class="hidden">
+
+            <div class="card auth-card">
+
+                <h2>🔐 Acessar Conta</h2>
+
+                <p class="auth-subtitle">
+
+                    Conecte-se para sincronizar suas listas.
+
+                </p>
+
+                <label>E-mail</label>
+
+                <input
+                    id="log-email"
+                    type="email"
+                    placeholder="seuemail@provedor.com">
+
+                <label>Senha</label>
+
+                <input
+                    id="log-password"
+                    type="password"
+                    placeholder="Sua senha">
+
+                <button
+                    onclick="handleAuthAction('login')"
+                    style="margin-top:25px">
+
+                    Entrar
+
+                </button>
+
+                <div class="divider">
+                    ou
+                </div>
+
+                <button
+                    class="btn-google"
+                    onclick="loginWithGoogle()">
+
+                    <span class="google-icon">🌐</span>
+
+                    Entrar com Google
+
+                </button>
+
+                <p class="auth-switch-text">
+
+                    Não possui conta?
+
+                    <a onclick="navigateTo('screen-register')" href="#">
+
+                        Cadastre-se
+
+                    </a>
+
+                </p>
+
+            </div>
+
+        </section>
+
+        <!-- ========================================= -->
+        <!-- MENU PRINCIPAL -->
+        <!-- ========================================= -->
+
+        <section
+            id="screen-home"
+            class="dashboard hidden">
+
+            <div class="welcome-banner">
+
+                <p>
+                    Olá, bem-vindo de volta 👋
+                </p>
+
+                <h2 id="home-welcome-msg">
+
+                    Vamos às compras...
+
+                </h2>
+
+            </div>
+
+            <button
+                class="menu-btn"
+                onclick="navigateTo('screen-form')">
+
+                <span class="menu-icon">
+                    ⚖️
+                </span>
+
+                <div class="menu-text">
+
+                    <h3>Comparar Preços</h3>
+
+                    <p>
+                        Descubra o melhor custo-benefício
+                    </p>
+
+                </div>
+
+            </button>
+
+            <button
+                class="menu-btn"
+                onclick="navigateTo('screen-cart')">
+
+                <span class="menu-icon">
+                    📋
+                </span>
+
+                <div class="menu-text">
+
+                    <h3>Lista de Compras</h3>
+
+                    <p>
+
+                        Veja seus produtos
+
+                    </p>
+
+                </div>
+
+            </button>
+
+            
+            <!-- <button
+                class="menu-btn"
+                onclick="navigateTo('screen-markets')">
+
+                <span class="menu-icon">
+                    🏪
+                </span>
+
+                <div class="menu-text">
+
+                    <h3>Mercados</h3>
+
+                    <p>
+
+                        Cadastre supermercados
+
+                    </p>
+
+                </div>
+
+            </button> -->
+
+              <button
+                class="menu-btn"
+                onclick="navigateTo('screen-history')">
+
+         <span class="menu-icon">
+                🧾
+         </span>
+
+        <div class="menu-text">
+
+            <h3>Histórico</h3>
+
+            <p>
+                Veja suas compras anteriores
+            </p>
+
+        </div>
+
+        </button>
+
+            <button
+                class="menu-btn"
+                onclick="navigateTo('screen-settings')">
+
+                <span class="menu-icon">
+                    ⚙️
+                </span>
+
+                <div class="menu-text">
+
+                    <h3>Configurações</h3>
+
+                    <p>
+
+                        Perfil e preferências
+
+                    </p>
+
+                </div>
+
+            </button>
+
+          
+
+        </section>
+
+<!-- ========================================= -->
+<!-- COMPARAÇÃO DE PRODUTOS -->
+<!-- ========================================= -->
+
+<section id="screen-form" class="hidden">
+
+    <button
+        class="btn-back"
+        onclick="navigateTo('screen-home')">
+
+        ⬅️ Voltar ao Menu
+
+    </button>
+
+    <div class="products">
+
+        <!-- Produto 1 -->
+        <section class="card">
+
+            <h2>Produto 1</h2>
+            <label>Nome</label>
+
+    <div class="input-with-button">
+
+            <input
+                id="name1"
+                type="text"
+                placeholder="Ex.: Arroz">
+
+                <button 
+                    type="button"
+                    class="barcode-btn"
+                    onclick="openProductSearch(1)">
+                    <i class="fa-solid fa-barcode"></i>
+        
+                </button>
+
+    </div>
+
+            <label>Preço (R$)</label>
+            <input
+                id="price1"
+                type="number"
+                placeholder="0.00">
+
+            <label>Quantidade</label>
+            <input
+                id="quantity1"
+                type="number"
+                placeholder="1">
+
+            <label>Unidade</label>
+            
+        <div class="custom-select">
+    
+                <div class="custom-select-selected">
+    ⚖️
+    <span class="selected-text">Selecione</span>
+    <span class="arrow">▼</span>
+</div>
+
+    <div class="custom-select-options">
+
+        <div data-value="kg">⚖️ Quilograma (kg)</div>
+        <div data-value="g">⚖️ Grama (g)</div>
+        <div data-value="l">💧 Litro (L)</div>
+        <div data-value="ml">💧 Mililitro (ml)</div>
+        <div data-value="un">📦 Unidade (un)</div>
+
+    </div>
+    <input type="hidden" id="unit1">
+</div>
+
+        </section>
+
+        <!-- Produto 2 -->
+        <section class="card">
+            <h2>Produto 2</h2>
+            <label>Nome</label>
+
+    <div class="input-with-button">
+        <input
+            id="name2"
+            type="text"
+            placeholder="Ex.: Arroz">
+
+            <button 
+                type="button"
+                class="barcode-btn"
+                onclick="openProductSearch(2)">
+                <i class="fa-solid fa-barcode"></i>
+            </button>
+    </div>
+            <label>Preço (R$)</label>
+            <input
+                id="price2"
+                type="number"
+                placeholder="0.00">
+
+            <label>Quantidade</label>
+            <input
+                id="quantity2"
+                type="number"
+                placeholder="1">
+
+            <label>Unidade</label>
+
+            <div class="custom-select">
+
+    <div class="custom-select-selected">
+
+    ⚖️
+    <span class="selected-text">Selecione</span>
+
+    <span class="arrow">▼</span>
+
+</div>
+    <div class="custom-select-options">
+
+        <div data-value="kg">⚖️ Quilograma (kg)</div>
+        <div data-value="g">⚖️ Grama (g)</div>
+        <div data-value="l">💧 Litro (L)</div>
+        <div data-value="ml">💧 Mililitro (ml)</div>
+        <div data-value="un">📦 Unidade (un)</div>
+
+    </div>
+
+    <input type="hidden" id="unit2">
+
+</div>
+
+        </section>
+
+    </div>
+
+    <button id="compareButton">
+
+        Comparar Produtos
+
+    </button>
+
+</section>
+
+<!-- ========================================= -->
+<!-- RESULTADO DA COMPARAÇÃO -->
+<!-- ========================================= -->
+
+<section id="screen-result" class="hidden">
+
+    <div class="card result-card">
+
+        <div id="winner-details"></div>
+
+        <div class="action-buttons">
+
+            <button
+                type="button"
+                id="addToCartButton"
+                class="btn-success">
+
+                Adicionar ao Carrinho
+
+            </button>
+
+            <button
+                 type="button"
+                id="discardButton"
+                class="btn-danger">
+
+                Descartar
+
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+ <div id="product-search-modal" class="modal-overlay hidden">
+
+    <div class="modal-card search-card">
+
+        <h3>
+            🔎 Buscar Produto
+        </h3>
+
+
+        <button 
+            class="search-option"
+            onclick="openNameSearch()">
+
+            ✏️ Pesquisar por nome
+
+        </button>
+
+
+        <button
+            class="search-option"
+            onclick="openScanner()">
+
+            📷 Escanear código de barras
+
+        </button>
+
+
+        <button
+            class="btn-modal-cancel"
+            onclick="closeProductSearch()">
+
+            Cancelar
+
+        </button>
+
+    </div>
+
+</div>
+
+
+    <div id="name-search-modal" class="modal-overlay hidden">
+
+        <div class="modal-card">
+
+            <h3>
+            🔎 Pesquisar Produto
+            </h3>
+
+
+                <label>
+                Nome do produto
+                </label>
+
+
+            <input 
+                id="product-name-search"
+                placeholder="Ex: Arroz">
+
+
+            <button onclick="searchProductByName()">
+                Pesquisar
+            </button>
+
+
+    <div id="search-results"></div>
+
+
+<button
+class="btn-modal-cancel"
+onclick="closeNameSearch()">
+
+Cancelar
+
+</button>
+
+
+</div>
+
+</div>
+
+<div id="scanner-modal" class="modal-overlay hidden">
+
+<div class="modal-card scanner-card">
+
+<h3>
+📷 Escanear código
+</h3>
+
+
+<div id="reader"></div>
+
+
+<button
+class="btn-modal-cancel"
+onclick="closeScanner()">
+
+Cancelar
+
+</button>
+
+
+</div>
+
+</div>
+
+<!-- ========================================= -->
+<!-- LISTA DE COMPRAS -->
+<!-- ========================================= -->
+
+<section id="screen-cart" class="hidden">
+
+    <button
+        class="btn-back"
+        onclick="navigateTo('screen-home')">
+
+        ⬅️ Voltar
+
+    </button>
+
+    <div class="card cart-box">
+
+        <div class="cart-header">
+
+    <h2>📋 Minha Lista</h2>
+
+    <div class="cart-header-actions">
+
+        <button
+            id="open-add-modal-btn"
+            class="btn-add-plus">
+            ＋
+        </button>
+
+        <button
+            id="clear-cart-btn"
+            class="btn-clear-cart"
+            onclick="openClearCartModal()">
+            🗑️
+        </button>
+
+    </div>
+
+</div>
+
+        <ul id="cart-list"></ul>
+
+        <div class="cart-footer">
+
+    <div class="cart-total-row">
+
+    <span>Total da compra</span>
+
+    <strong id="cart-total">
+        R$ 0,00
+    </strong>
+
+</div>
+
+<div
+id="cart-items-count"
+class="cart-total-items">
+    0 itens
+</div>
+
+    <button
+    class="btn-success"
+    onclick="openCheckoutModal()">
+
+    Finalizar Compra
+
+    </button>
+
+</div>
+
+</section>
+
+
+<!-- ========================================= -->
+<!-- MERCADOS -->
+<!-- ========================================= -->
+
+<!-- <section id="screen-markets" class="hidden">
+
+    <button
+        onclick="navigateTo('screen-home')"
+        class="btn-back">
+
+        ⬅️ Voltar ao Menu
+
+    </button>
+
+    <div class="card">
+
+        <div class="cart-header">
+
+            <div>
+
+                <h2>🏪 Meus Mercados</h2>
+
+                <small id="markets-count">
+                    0 mercados cadastrados
+                </small>
+
+            </div>
+
+            <button
+                onclick="openMarketModal()"
+                class="btn-add-plus">
+
+                ＋
+
+            </button>
+
+        </div>
+
+        <ul id="market-list">
+
+        </ul>
+
+    </div>
+
+</section> -->
+
+    <div id="add-product-modal" class="modal-overlay hidden">
+        <div class="modal-card" style="max-width: 400px; text-align: left;">
+            <h3 style="margin-bottom: 5px; color: var(--primary); font-size: 1.25rem; font-weight: 700;">✨ Novo Item Avulso</h3>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 15px;">Adicione um produto direto no seu carrinho.</p>
+            <label>Nome do Produto</label>
+            <input id="modal-add-name" type="text" placeholder="Ex.: Feijão Camil">
+            <label>Preço (R$)</label>
+            <input
+                id="modal-add-price"
+                type="number"
+                step="0.01"
+                min="0"
+                placeholder="0,00">
+            <label>Quantidade</label>
+            <input
+                id="modal-add-quantity"
+                type="number"
+                step="0.001"
+                min="0"
+                placeholder="1">
+            <label>Unidade</label>
+
+            <div class="custom-select" id="unit-dropdown">
+
+    <div 
+        class="custom-select-selected"
+        onclick="toggleDropdown('unit-dropdown')">
+
+        ⚖️ <span id="unit-selected-text">Selecione</span>
+
+        <span class="arrow">▼</span>
+
+    </div>
+
+
+    <div class="custom-select-options">
+
+        <div onclick="selectOption('kg','Quilograma (kg)','unit')">
+            ⚖️ Quilograma (kg)
+        </div>
+
+        <div onclick="selectOption('g','Grama (g)','unit')">
+            ⚖️ Grama (g)
+        </div>
+
+        <div onclick="selectOption('l','Litro (L)','unit')">
+            💧 Litro (L)
+        </div>
+
+        <div onclick="selectOption('ml','Mililitro (ml)','unit')">
+            💧 Mililitro (ml)
+        </div>
+
+        <div onclick="selectOption('un','Unidade (un)','unit')">
+            📦 Unidade (un)
+        </div>
+
+    </div>
+
+
+    <input 
+        type="hidden"
+        id="modal-add-unit"
+        value="">
+
+</div>
+            <div class="modal-buttons" style="margin-top: 25px;">
+                <button onclick="saveDirectProductFromModal()" style="background: var(--primary);">Adicionar</button>
+                <button onclick="closeAddProductModal()" class="btn-modal-cancel">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="custom-modal" class="modal-overlay hidden">
+        <div class="modal-card">
+            <div class="modal-icon">🗑️</div>
+            <h3>Remover Produto</h3>
+            <p id="modal-message">Certeza que deseja excluir este item da sua lista?</p>
+            <div class="modal-buttons">
+                <button id="modal-confirm-btn" class="btn-modal-confirm">Sim, excluir</button>
+                <button id="modal-cancel-btn" class="btn-modal-cancel">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+
+<div id="market-modal" class="modal-overlay hidden">
+
+    <div class="modal-card">
+
+        <h3>
+
+            🏪 Novo Mercado
+
+        </h3>
+
+        <label>Nome</label>
+
+        <input
+            id="market-name"
+            type="text"
+            placeholder="Ex.: Guanabara">
+
+        <label>Cidade</label>
+
+        <input
+            id="market-neighborhood"
+            type="text"
+            placeholder="Ex.: Niterói">
+
+        <div class="modal-buttons">
+
+            <button
+                onclick="saveMarket()">
+
+                Salvar
+
+            </button>
+
+            <button
+                onclick="closeMarketModal()"
+                class="btn-modal-cancel">
+
+                Cancelar
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- HISTORICO DAS COMPRAS -->
+
+<section id="screen-history" class="hidden">
+
+    <button
+        class="btn-back"
+        onclick="navigateTo('screen-home')">
+
+        ⬅️ Voltar
+
+    </button>
+
+    <div class="card">
+
+        <h2>🧾 Histórico de Compras</h2>
+
+        <ul id="history-list"></ul>
+
+    </div>
+
+</section>
+
+<!-- TELA HISTORICO - PRODUTOS DA COMPRA -->
+
+<section id="screen-history-details" class="hidden">
+
+    <button 
+        class="btn-back"
+        onclick="navigateTo('screen-history')">
+
+        ⬅️ Voltar
+
+    </button>
+
+
+    <div class="card history-details-card">
+
+        <div class="history-detail-header">
+
+            <h2 id="detail-title">
+                
+            </h2>
+
+            <span id="detail-date"></span>
+
+        </div>
+
+
+        <div class="detail-market-box">
+
+            <span id="detail-market"></span>
+
+        </div>
+
+
+        <h3>
+            🛒 Produtos comprados
+        </h3>
+
+
+        <ul id="detail-items" class="detail-product-list"></ul>
+
+
+        <div class="cart-total-row history-total">
+
+            <span>Total da compra</span>
+
+            <strong id="detail-total">
+                R$ 0,00
+            </strong>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ========================================= -->
+<!-- CONFIGURAÇÕES -->
+<!-- ========================================= -->
+
+<section id="screen-settings" class="hidden">
+
+    <button
+        class="btn-back"
+        onclick="navigateTo('screen-home')">
+
+        ⬅️ Voltar ao Menu
+
+    </button>
+
+
+    <!-- PERFIL -->
+
+    <!-- <div class="profile-settings">
+
+
+        <div class="profile-top">
+
+
+            <div 
+                class="avatar-container"
+                onclick="triggerAvatarUpload()">
+
+
+                <img
+                    id="settings-avatar-preview"
+                    src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+                    class="profile-avatar">
+
+
+                <div class="avatar-edit-overlay">
+                    📷
+                </div>
+
+
+                <input
+                    id="avatar-input"
+                    type="file"
+                    accept="image/*"
+                    hidden
+                    onchange="previewSelectedAvatar(event)">
+
+
+            </div>
+
+
+
+            <div class="profile-name">
+
+                <strong id="settings-profile-name">
+                    Usuário
+                </strong>
+
+            </div>
+
+
+        </div> -->
+
+
+
+        <h3 class="section-title">
+            DADOS PESSOAIS
+        </h3>
+
+
+
+        <div class="settings-row">
+
+    <span class="setting-label">
+        Nome de exibição
+    </span>
+
+
+    <div class="setting-value">
+
+        <span id="settings-display-name">
+            Usuário
+        </span>
+
+
+        <button
+            class="edit-button"
+            onclick="openNameModal()">
+
+            ✏️
+
+        </button>
+
+    </div>
+
+</div>
+
+        <div class="settings-row">
+
+    <span class="setting-label">
+        Senha
+    </span>
+
+    <div class="setting-value">
+
+        <button
+            class="edit-button"
+            onclick="openPasswordModal()">
+
+            ✏️
+
+        </button>
+
+    </div>
+
+</div>
+
+        <div class="settings-row">
+
+    <span class="setting-label">
+        Email
+    </span>
+
+    <div class="setting-value">
+
+        <span id="settings-email">
+            email@email.com
+        </span>
+
+    </div>
+
+</div>
+
+    <!-- PERSONALIZAÇÃO -->
+
+    <div class="settings-card">
+
+        <h3>
+            PERSONALIZAÇÃO
+        </h3>
+
+        <p class="settings-description">
+
+            Ajuste a aparência do aplicativo conforme sua preferência.
+
+        </p>
+
+        <div class="theme-box">
+
+
+            <span>
+                🌙 Modo noturno
+            </span>
+
+            <label class="switch">
+
+                <input
+                    type="checkbox"
+                    id="theme-toggle-checkbox">
+
+                <span class="slider"></span>
+
+            </label>
+
+        </div>
+
+    </div>
+
+
+    <!-- SAIR -->
+
+
+    <button
+        class="logout-button"
+        onclick="handleLogout()">
+
+        🔴 Encerrar sessão
+
+    </button>
+
+</section>
+
+</div>
+
+<!-- MODAL ALTERAÇÃO DE SENHA -->
+
+<div id="password-modal" class="modal-overlay hidden">
+
+    <div class="modal-card password-card">
+
+        <h3>
+            🔒 Alterar senha
+        </h3>
+
+        <p>
+            Digite sua senha atual e escolha uma nova senha.
+        </p>
+
+
+        <input 
+        id="current-password"
+        type="password"
+        placeholder="Senha atual">
+
+
+        <input 
+        id="new-password"
+        type="password"
+        placeholder="Nova senha">
+
+
+        <input 
+        id="confirm-password"
+        type="password"
+        placeholder="Confirmar nova senha">
+
+        <div class="modal-buttons">
+
+            <button
+            class="btn-modal-cancel"
+            onclick="closePasswordModal()">
+
+                Cancelar
+
+            </button>
+
+
+            <button
+            class="btn-modal-confirm"
+            onclick="updatePassword()">
+
+                Atualizar
+
+            </button>
+
+
+        </div>
+
+
+    </div>
+
+</div>
+
+<div id="name-modal" class="modal-overlay hidden">
+
+    <div class="modal-card">
+
+        <h3>
+            Alterar nome
+        </h3>
+
+
+        <input
+        id="new-display-name"
+        type="text"
+        placeholder="Digite seu nome">
+
+
+        <div class="modal-buttons">
+
+            <button 
+            class="btn-modal-cancel"
+            onclick="closeNameModal()">
+
+                Cancelar
+
+            </button>
+
+
+            <button
+            class="btn-modal-confirm"
+            onclick="updateName()">
+
+                Atualizar
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- MODAL FINALIZAR COMPRA -->
+
+<div id="checkout-modal" class="modal-overlay hidden">
+
+    <div class="modal-card">
+
+        <h3>🛒 Finalizar Compra</h3>
+
+        <p>Selecione o mercado onde a compra foi realizada.</p>
+
+        <div class="custom-select" id="checkout-market-dropdown">
+            <div class="custom-select-selected">
+                <span aria-hidden="true">🏪</span>
+                <span class="selected-text">Selecione um mercado</span>
+                <span class="arrow">▼</span>
+            </div>
+
+            <div class="custom-select-options" id="checkout-market-options"></div>
+
+            <input type="hidden" id="checkout-market-select" value="">
+        </div>
+
+        <button
+            type="button"
+            class="btn-modal-secondary"
+            onclick="openMarketModal()">
+
+            + Cadastrar novo mercado
+
+        </button>
+
+        <div class="modal-buttons">
+
+    <button
+        type="button"
+        class="btn-modal-cancel"
+        onclick="closeCheckoutModal()">
+
+        Cancelar
+
+    </button>
+
+    <button
+        type="button"
+        class="btn-success"
+        onclick="finishPurchase()">
+
+        Finalizar
+
+    </button>
+
+</div>
+
+    </div>
+
+</div>
+
+<!-- MODAL BUSCA PRODUTO -->
+
+<!-- <div id="product-search-modal" class="modal-overlay hidden">
+
+    <div class="modal-card">
+
+        <h3>
+            🔎 Buscar Produto
+        </h3>
+
+
+        <button 
+            onclick="searchProductByName()">
+
+            🔍 Pesquisar por nome
+
+        </button>
+
+
+        <button
+            onclick="startBarcodeScanner()">
+
+            📷 Usar câmera
+
+        </button>
+
+
+        <button
+            class="btn-modal-cancel"
+            onclick="closeProductSearch()">
+
+            Cancelar
+
+        </button>
+
+        <div id="reader" style="width:300px"></div>
+
+    </div>
+
+</div> -->
+
+    <div id="toast-notification" class="toast hidden"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <script src="./js/utils.js"></script>
+    <script src="./js/calculator.js"></script>
+    <script src="./js/product.js"></script>
+    <script src="./js/ui.js"></script>
+    
+    <script src="./js/markets.js"></script>
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <script src="./js/app.js"></script>
+    <script src="./js/history.js"></script>
+    <script src="./js/database.js"></script>
+
+</body>
+</html>
