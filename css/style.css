@@ -1,1312 +1,1758 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mercado Inteligente</title>
-    
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Mercado Inteligente">
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./css/style.css">
-    <link rel="manifest" href="./manifest.json">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-</head>
-<body>
-
-    <div class="app-layout">
-
-        <!-- ========================================= -->
-        <!-- CABEÇALHO -->
-        <!-- ========================================= -->
-
-        <header class="main-header">
-            <h1>🛒 Mercado Inteligente</h1>
-        </header>
-
-        <!-- ========================================= -->
-        <!-- AUTENTICAÇÃO -->
-        <!-- ========================================= -->
-
-        <!-- Cadastro -->
-        <section id="screen-register">
-
-            <div class="card auth-card">
-
-                <h2>✨ Criar Conta</h2>
-
-                <p class="auth-subtitle">
-                    Cadastre-se para começar a economizar nos mercados.
-                </p>
-
-                <label>Nome Completo</label>
-                <input
-                    id="reg-name"
-                    type="text"
-                    placeholder="Ex: Maria Silva">
-
-                <label>E-mail</label>
-                <input
-                    id="reg-email"
-                    type="email"
-                    placeholder="seuemail@provedor.com">
-
-                <label>Senha</label>
-                <input
-                    id="reg-password"
-                    type="password"
-                    placeholder="Crie uma senha segura">
-
-                <button
-
-                    onclick="handleAuthAction('cadastro')"
-                    style="margin-top:25px">
-
-                    Criar Minha Conta
-
-                </button>
-
-                <div class="divider">
-                    ou
-                </div>
-
-                <button
-                    class="btn-google"
-                    onclick="loginWithGoogle()">
-
-                    <span class="google-icon">🌐</span>
-
-                    Cadastrar com Google
-
-                </button>
-
-                <p class="auth-switch-text">
-
-                    Já tem login?
-
-                    <a onclick="navigateTo('screen-login')" href="#">
-
-                        Entre aqui
-
-                    </a>
-
-                </p>
-
-            </div>
-
-        </section>
-
-        <!-- Login -->
-        <section id="screen-login" class="hidden">
-
-            <div class="card auth-card">
-
-                <h2>🔐 Acessar Conta</h2>
-
-                <p class="auth-subtitle">
-
-                    Conecte-se para sincronizar suas listas.
-
-                </p>
-
-                <label>E-mail</label>
-
-                <input
-                    id="log-email"
-                    type="email"
-                    placeholder="seuemail@provedor.com">
-
-                <label>Senha</label>
-
-                <input
-                    id="log-password"
-                    type="password"
-                    placeholder="Sua senha">
-
-                <button
-                    onclick="handleAuthAction('login')"
-                    style="margin-top:25px">
-
-                    Entrar
-
-                </button>
-
-                <div class="divider">
-                    ou
-                </div>
-
-                <button
-                    class="btn-google"
-                    onclick="loginWithGoogle()">
-
-                    <span class="google-icon">🌐</span>
-
-                    Entrar com Google
-
-                </button>
-
-                <p class="auth-switch-text">
-
-                    Não possui conta?
-
-                    <a onclick="navigateTo('screen-register')" href="#">
-
-                        Cadastre-se
-
-                    </a>
-
-                </p>
-
-            </div>
-
-        </section>
-
-        <!-- ========================================= -->
-        <!-- MENU PRINCIPAL -->
-        <!-- ========================================= -->
-
-        <section
-            id="screen-home"
-            class="dashboard hidden">
-
-            <div class="welcome-banner">
-
-                <p>
-                    Olá, bem-vindo de volta 👋
-                </p>
-
-                <h2 id="home-welcome-msg">
-
-                    Vamos às compras...
-
-                </h2>
-
-            </div>
-
-            <button
-                class="menu-btn"
-                onclick="navigateTo('screen-form')">
-
-                <span class="menu-icon">
-                    ⚖️
-                </span>
-
-                <div class="menu-text">
-
-                    <h3>Comparar Preços</h3>
-
-                    <p>
-                        Descubra o melhor custo-benefício
-                    </p>
-
-                </div>
-
-            </button>
-
-            <button
-                class="menu-btn"
-                onclick="navigateTo('screen-cart')">
-
-                <span class="menu-icon">
-                    📋
-                </span>
-
-                <div class="menu-text">
-
-                    <h3>Lista de Compras</h3>
-
-                    <p>
-
-                        Veja seus produtos
-
-                    </p>
-
-                </div>
-
-            </button>
-
-            
-            <!-- <button
-                class="menu-btn"
-                onclick="navigateTo('screen-markets')">
-
-                <span class="menu-icon">
-                    🏪
-                </span>
-
-                <div class="menu-text">
-
-                    <h3>Mercados</h3>
-
-                    <p>
-
-                        Cadastre supermercados
-
-                    </p>
-
-                </div>
-
-            </button> -->
-
-              <button
-                class="menu-btn"
-                onclick="navigateTo('screen-history')">
-
-         <span class="menu-icon">
-                🧾
-         </span>
-
-        <div class="menu-text">
-
-            <h3>Histórico</h3>
-
-            <p>
-                Veja suas compras anteriores
-            </p>
-
-        </div>
-
-        </button>
-
-            <button
-                class="menu-btn"
-                onclick="navigateTo('screen-settings')">
-
-                <span class="menu-icon">
-                    ⚙️
-                </span>
-
-                <div class="menu-text">
-
-                    <h3>Configurações</h3>
-
-                    <p>
-
-                        Perfil e preferências
-
-                    </p>
-
-                </div>
-
-            </button>
-
-          
-
-        </section>
-
-<!-- ========================================= -->
-<!-- COMPARAÇÃO DE PRODUTOS -->
-<!-- ========================================= -->
-
-<section id="screen-form" class="hidden">
-
-    <button
-        class="btn-back"
-        onclick="navigateTo('screen-home')">
-
-        ⬅️ Voltar ao Menu
-
-    </button>
-
-    <div class="products">
-
-        <!-- Produto 1 -->
-        <section class="card">
-
-            <h2>Produto 1</h2>
-            <label>Nome</label>
-
-    <div class="input-with-button">
-
-            <input
-                id="name1"
-                type="text"
-                placeholder="Ex.: Arroz">
-
-                <button 
-                    type="button"
-                    class="barcode-btn"
-                    onclick="openProductSearch(1)">
-                    <i class="fa-solid fa-barcode"></i>
-        
-                </button>
-
-    </div>
-
-            <label>Preço (R$)</label>
-            <input
-                id="price1"
-                type="number"
-                placeholder="0.00">
-
-            <label>Quantidade</label>
-            <input
-                id="quantity1"
-                type="number"
-                placeholder="1">
-
-            <label>Unidade</label>
-            
-        <div class="custom-select">
-    
-                <div class="custom-select-selected">
-    ⚖️
-    <span class="selected-text">Selecione</span>
-    <span class="arrow">▼</span>
-</div>
-
-    <div class="custom-select-options">
-
-        <div data-value="kg">⚖️ Quilograma (kg)</div>
-        <div data-value="g">⚖️ Grama (g)</div>
-        <div data-value="l">💧 Litro (L)</div>
-        <div data-value="ml">💧 Mililitro (ml)</div>
-        <div data-value="un">📦 Unidade (un)</div>
-
-    </div>
-    <input type="hidden" id="unit1">
-</div>
-
-        </section>
-
-        <!-- Produto 2 -->
-        <section class="card">
-            <h2>Produto 2</h2>
-            <label>Nome</label>
-
-    <div class="input-with-button">
-        <input
-            id="name2"
-            type="text"
-            placeholder="Ex.: Arroz">
-
-            <button 
-                type="button"
-                class="barcode-btn"
-                onclick="openProductSearch(2)">
-                <i class="fa-solid fa-barcode"></i>
-            </button>
-    </div>
-            <label>Preço (R$)</label>
-            <input
-                id="price2"
-                type="number"
-                placeholder="0.00">
-
-            <label>Quantidade</label>
-            <input
-                id="quantity2"
-                type="number"
-                placeholder="1">
-
-            <label>Unidade</label>
-
-            <div class="custom-select">
-
-    <div class="custom-select-selected">
-
-    ⚖️
-    <span class="selected-text">Selecione</span>
-
-    <span class="arrow">▼</span>
-
-</div>
-    <div class="custom-select-options">
-
-        <div data-value="kg">⚖️ Quilograma (kg)</div>
-        <div data-value="g">⚖️ Grama (g)</div>
-        <div data-value="l">💧 Litro (L)</div>
-        <div data-value="ml">💧 Mililitro (ml)</div>
-        <div data-value="un">📦 Unidade (un)</div>
-
-    </div>
-
-    <input type="hidden" id="unit2">
-
-</div>
-
-        </section>
-
-    </div>
-
-    <button id="compareButton">
-
-        Comparar Produtos
-
-    </button>
-
-</section>
-
-<!-- ========================================= -->
-<!-- RESULTADO DA COMPARAÇÃO -->
-<!-- ========================================= -->
-
-<section id="screen-result" class="hidden">
-
-    <div class="card result-card">
-
-        <div id="winner-details"></div>
-
-        <div class="action-buttons">
-
-            <button
-                type="button"
-                id="addToCartButton"
-                class="btn-success">
-
-                Adicionar ao Carrinho
-
-            </button>
-
-            <button
-                 type="button"
-                id="discardButton"
-                class="btn-danger">
-
-                Descartar
-
-            </button>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-
- <div id="product-search-modal" class="modal-overlay hidden">
-
-    <div class="modal-card search-card">
-
-        <h3>
-            🔎 Buscar Produto
-        </h3>
-
-
-        <button 
-            class="search-option"
-            onclick="openNameSearch()">
-
-            ✏️ Pesquisar por nome
-
-        </button>
-
-
-        <button
-            class="search-option"
-            onclick="openScanner()">
-
-            📷 Escanear código de barras
-
-        </button>
-
-
-        <button
-            class="btn-modal-cancel"
-            onclick="closeProductSearch()">
-
-            Cancelar
-
-        </button>
-
-    </div>
-
-</div>
-
-
-    <div id="name-search-modal" class="modal-overlay hidden">
-
-        <div class="modal-card">
-
-            <h3>
-            🔎 Pesquisar Produto
-            </h3>
-
-
-                <label>
-                Nome do produto
-                </label>
-
-
-            <input 
-                id="product-name-search"
-                placeholder="Ex: Arroz">
-
-
-            <button onclick="searchProductByName()">
-                Pesquisar
-            </button>
-
-
-    <div id="search-results"></div>
-
-
-<button
-class="btn-modal-cancel"
-onclick="closeNameSearch()">
-
-Cancelar
-
-</button>
-
-
-</div>
-
-</div>
-
-<div id="scanner-modal" class="modal-overlay hidden">
-
-<div class="modal-card scanner-card">
-
-<h3>
-📷 Escanear código
-</h3>
-
-
-<div id="reader"></div>
-
-
-<button
-class="btn-modal-cancel"
-onclick="closeScanner()">
-
-Cancelar
-
-</button>
-
-
-</div>
-
-</div>
-
-<!-- ========================================= -->
-<!-- LISTA DE COMPRAS -->
-<!-- ========================================= -->
-
-<section id="screen-cart" class="hidden">
-
-    <button
-        class="btn-back"
-        onclick="navigateTo('screen-home')">
-
-        ⬅️ Voltar
-
-    </button>
-
-    <div class="card cart-box">
-
-        <div class="cart-header">
-
-    <h2>📋 Minha Lista</h2>
-
-    <div class="cart-header-actions">
-
-        <button
-            id="open-add-modal-btn"
-            class="btn-add-plus">
-            ＋
-        </button>
-
-        <button
-            id="clear-cart-btn"
-            class="btn-clear-cart"
-            onclick="openClearCartModal()">
-            🗑️
-        </button>
-
-    </div>
-
-</div>
-
-        <ul id="cart-list"></ul>
-
-        <div class="cart-footer">
-
-    <div class="cart-total-row">
-
-    <span>Total da compra</span>
-
-    <strong id="cart-total">
-        R$ 0,00
-    </strong>
-
-</div>
-
-<div
-id="cart-items-count"
-class="cart-total-items">
-    0 itens
-</div>
-
-    <button
-    class="btn-success"
-    onclick="openCheckoutModal()">
-
-    Finalizar Compra
-
-    </button>
-
-</div>
-
-</section>
-
-
-<!-- ========================================= -->
-<!-- MERCADOS -->
-<!-- ========================================= -->
-
-<!-- <section id="screen-markets" class="hidden">
-
-    <button
-        onclick="navigateTo('screen-home')"
-        class="btn-back">
-
-        ⬅️ Voltar ao Menu
-
-    </button>
-
-    <div class="card">
-
-        <div class="cart-header">
-
-            <div>
-
-                <h2>🏪 Meus Mercados</h2>
-
-                <small id="markets-count">
-                    0 mercados cadastrados
-                </small>
-
-            </div>
-
-            <button
-                onclick="openMarketModal()"
-                class="btn-add-plus">
-
-                ＋
-
-            </button>
-
-        </div>
-
-        <ul id="market-list">
-
-        </ul>
-
-    </div>
-
-</section> -->
-
-    <div id="add-product-modal" class="modal-overlay hidden">
-        <div class="modal-card" style="max-width: 400px; text-align: left;">
-            <h3 style="margin-bottom: 5px; color: var(--primary); font-size: 1.25rem; font-weight: 700;">✨ Novo Item Avulso</h3>
-            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 15px;">Adicione um produto direto no seu carrinho.</p>
-            <label>Nome do Produto</label>
-            <input id="modal-add-name" type="text" placeholder="Ex.: Feijão Camil">
-            <label>Preço (R$)</label>
-            <input
-                id="modal-add-price"
-                type="number"
-                step="0.01"
-                min="0"
-                placeholder="0,00">
-            <label>Quantidade</label>
-            <input
-                id="modal-add-quantity"
-                type="number"
-                step="0.001"
-                min="0"
-                placeholder="1">
-            <label>Unidade</label>
-
-            <div class="custom-select" id="unit-dropdown">
-
-    <div 
-        class="custom-select-selected"
-        onclick="toggleDropdown('unit-dropdown')">
-
-        ⚖️ <span id="unit-selected-text">Selecione</span>
-
-        <span class="arrow">▼</span>
-
-    </div>
-
-
-    <div class="custom-select-options">
-
-        <div onclick="selectOption('kg','Quilograma (kg)','unit')">
-            ⚖️ Quilograma (kg)
-        </div>
-
-        <div onclick="selectOption('g','Grama (g)','unit')">
-            ⚖️ Grama (g)
-        </div>
-
-        <div onclick="selectOption('l','Litro (L)','unit')">
-            💧 Litro (L)
-        </div>
-
-        <div onclick="selectOption('ml','Mililitro (ml)','unit')">
-            💧 Mililitro (ml)
-        </div>
-
-        <div onclick="selectOption('un','Unidade (un)','unit')">
-            📦 Unidade (un)
-        </div>
-
-    </div>
-
-
-    <input 
-        type="hidden"
-        id="modal-add-unit"
-        value="">
-
-</div>
-            <div class="modal-buttons" style="margin-top: 25px;">
-                <button onclick="saveDirectProductFromModal()" style="background: var(--primary);">Adicionar</button>
-                <button onclick="closeAddProductModal()" class="btn-modal-cancel">Cancelar</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="custom-modal" class="modal-overlay hidden">
-        <div class="modal-card">
-            <div class="modal-icon">🗑️</div>
-            <h3>Remover Produto</h3>
-            <p id="modal-message">Certeza que deseja excluir este item da sua lista?</p>
-            <div class="modal-buttons">
-                <button id="modal-confirm-btn" class="btn-modal-confirm">Sim, excluir</button>
-                <button id="modal-cancel-btn" class="btn-modal-cancel">Cancelar</button>
-            </div>
-        </div>
-    </div>
-
-
-<div id="market-modal" class="modal-overlay hidden">
-
-    <div class="modal-card">
-
-        <h3>
-
-            🏪 Novo Mercado
-
-        </h3>
-
-        <label>Nome</label>
-
-        <input
-            id="market-name"
-            type="text"
-            placeholder="Ex.: Guanabara">
-
-        <label>Cidade</label>
-
-        <input
-            id="market-neighborhood"
-            type="text"
-            placeholder="Ex.: Niterói">
-
-        <div class="modal-buttons">
-
-            <button
-                onclick="saveMarket()">
-
-                Salvar
-
-            </button>
-
-            <button
-                onclick="closeMarketModal()"
-                class="btn-modal-cancel">
-
-                Cancelar
-
-            </button>
-
-        </div>
-
-    </div>
-
-</div>
-
-<!-- HISTORICO DAS COMPRAS -->
-
-<section id="screen-history" class="hidden">
-
-    <button
-        class="btn-back"
-        onclick="navigateTo('screen-home')">
-
-        ⬅️ Voltar
-
-    </button>
-
-    <div class="card">
-
-        <h2>🧾 Histórico de Compras</h2>
-
-        <ul id="history-list"></ul>
-
-    </div>
-
-</section>
-
-<!-- TELA HISTORICO - PRODUTOS DA COMPRA -->
-
-<section id="screen-history-details" class="hidden">
-
-    <button 
-        class="btn-back"
-        onclick="navigateTo('screen-history')">
-
-        ⬅️ Voltar
-
-    </button>
-
-
-    <div class="card history-details-card">
-
-        <div class="history-detail-header">
-
-            <h2 id="detail-title">
-                
-            </h2>
-
-            <span id="detail-date"></span>
-
-        </div>
-
-
-        <div class="detail-market-box">
-
-            <span id="detail-market"></span>
-
-        </div>
-
-
-        <h3>
-            🛒 Produtos comprados
-        </h3>
-
-
-        <ul id="detail-items" class="detail-product-list"></ul>
-
-
-        <div class="cart-total-row history-total">
-
-            <span>Total da compra</span>
-
-            <strong id="detail-total">
-                R$ 0,00
-            </strong>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- ========================================= -->
-<!-- CONFIGURAÇÕES -->
-<!-- ========================================= -->
-
-<section id="screen-settings" class="hidden">
-
-    <button
-        class="btn-back"
-        onclick="navigateTo('screen-home')">
-
-        ⬅️ Voltar ao Menu
-
-    </button>
-
-
-    <!-- PERFIL -->
-
-    <!-- <div class="profile-settings">
-
-
-        <div class="profile-top">
-
-
-            <div 
-                class="avatar-container"
-                onclick="triggerAvatarUpload()">
-
-
-                <img
-                    id="settings-avatar-preview"
-                    src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
-                    class="profile-avatar">
-
-
-                <div class="avatar-edit-overlay">
-                    📷
-                </div>
-
-
-                <input
-                    id="avatar-input"
-                    type="file"
-                    accept="image/*"
-                    hidden
-                    onchange="previewSelectedAvatar(event)">
-
-
-            </div>
-
-
-
-            <div class="profile-name">
-
-                <strong id="settings-profile-name">
-                    Usuário
-                </strong>
-
-            </div>
-
-
-        </div> -->
-
-
-
-        <h3 class="section-title">
-            DADOS PESSOAIS
-        </h3>
-
-
-
-        <div class="settings-row">
-
-    <span class="setting-label">
-        Nome de exibição
-    </span>
-
-
-    <div class="setting-value">
-
-        <span id="settings-display-name">
-            Usuário
-        </span>
-
-
-        <button
-            class="edit-button"
-            onclick="openNameModal()">
-
-            ✏️
-
-        </button>
-
-    </div>
-
-</div>
-
-        <div class="settings-row">
-
-    <span class="setting-label">
-        Senha
-    </span>
-
-    <div class="setting-value">
-
-        <button
-            class="edit-button"
-            onclick="openPasswordModal()">
-
-            ✏️
-
-        </button>
-
-    </div>
-
-</div>
-
-        <div class="settings-row">
-
-    <span class="setting-label">
-        Email
-    </span>
-
-    <div class="setting-value">
-
-        <span id="settings-email">
-            email@email.com
-        </span>
-
-    </div>
-
-</div>
-
-    <!-- PERSONALIZAÇÃO -->
-
-    <div class="settings-card">
-
-        <h3>
-            PERSONALIZAÇÃO
-        </h3>
-
-        <p class="settings-description">
-
-            Ajuste a aparência do aplicativo conforme sua preferência.
-
-        </p>
-
-        <div class="theme-box">
-
-
-            <span>
-                🌙 Modo noturno
-            </span>
-
-            <label class="switch">
-
-                <input
-                    type="checkbox"
-                    id="theme-toggle-checkbox">
-
-                <span class="slider"></span>
-
-            </label>
-
-        </div>
-
-    </div>
-
-
-    <!-- SAIR -->
-
-
-    <button
-        class="logout-button"
-        onclick="handleLogout()">
-
-        🔴 Encerrar sessão
-
-    </button>
-
-</section>
-
-</div>
-
-<!-- MODAL ALTERAÇÃO DE SENHA -->
-
-<div id="password-modal" class="modal-overlay hidden">
-
-    <div class="modal-card password-card">
-
-        <h3>
-            🔒 Alterar senha
-        </h3>
-
-        <p>
-            Digite sua senha atual e escolha uma nova senha.
-        </p>
-
-
-        <input 
-        id="current-password"
-        type="password"
-        placeholder="Senha atual">
-
-
-        <input 
-        id="new-password"
-        type="password"
-        placeholder="Nova senha">
-
-
-        <input 
-        id="confirm-password"
-        type="password"
-        placeholder="Confirmar nova senha">
-
-        <div class="modal-buttons">
-
-            <button
-            class="btn-modal-cancel"
-            onclick="closePasswordModal()">
-
-                Cancelar
-
-            </button>
-
-
-            <button
-            class="btn-modal-confirm"
-            onclick="updatePassword()">
-
-                Atualizar
-
-            </button>
-
-
-        </div>
-
-
-    </div>
-
-</div>
-
-<div id="name-modal" class="modal-overlay hidden">
-
-    <div class="modal-card">
-
-        <h3>
-            Alterar nome
-        </h3>
-
-
-        <input
-        id="new-display-name"
-        type="text"
-        placeholder="Digite seu nome">
-
-
-        <div class="modal-buttons">
-
-            <button 
-            class="btn-modal-cancel"
-            onclick="closeNameModal()">
-
-                Cancelar
-
-            </button>
-
-
-            <button
-            class="btn-modal-confirm"
-            onclick="updateName()">
-
-                Atualizar
-
-            </button>
-
-        </div>
-
-    </div>
-
-</div>
-
-<!-- MODAL FINALIZAR COMPRA -->
-
-<div id="checkout-modal" class="modal-overlay hidden">
-
-    <div class="modal-card">
-
-        <h3>🛒 Finalizar Compra</h3>
-
-        <p>Selecione o mercado onde a compra foi realizada.</p>
-
-        <div class="custom-select" id="checkout-market-dropdown">
-            <div class="custom-select-selected">
-                <span aria-hidden="true">🏪</span>
-                <span class="selected-text">Selecione um mercado</span>
-                <span class="arrow">▼</span>
-            </div>
-
-            <div class="custom-select-options" id="checkout-market-options"></div>
-
-            <input type="hidden" id="checkout-market-select" value="">
-        </div>
-
-        <button
-            type="button"
-            class="btn-modal-secondary"
-            onclick="openMarketModal()">
-
-            + Cadastrar novo mercado
-
-        </button>
-
-        <div class="modal-buttons">
-
-    <button
-        type="button"
-        class="btn-modal-cancel"
-        onclick="closeCheckoutModal()">
-
-        Cancelar
-
-    </button>
-
-    <button
-        type="button"
-        class="btn-success"
-        onclick="finishPurchase()">
-
-        Finalizar
-
-    </button>
-
-</div>
-
-    </div>
-
-</div>
-
-<!-- MODAL BUSCA PRODUTO -->
-
-<!-- <div id="product-search-modal" class="modal-overlay hidden">
-
-    <div class="modal-card">
-
-        <h3>
-            🔎 Buscar Produto
-        </h3>
-
-
-        <button 
-            onclick="searchProductByName()">
-
-            🔍 Pesquisar por nome
-
-        </button>
-
-
-        <button
-            onclick="startBarcodeScanner()">
-
-            📷 Usar câmera
-
-        </button>
-
-
-        <button
-            class="btn-modal-cancel"
-            onclick="closeProductSearch()">
-
-            Cancelar
-
-        </button>
-
-        <div id="reader" style="width:300px"></div>
-
-    </div>
-
-</div> -->
-
-    <div id="toast-notification" class="toast hidden"></div>
-
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
-    <script src="./js/utils.js"></script>
-    <script src="./js/calculator.js"></script>
-    <script src="./js/product.js"></script>
-    <script src="./js/ui.js"></script>
-    
-    <script src="./js/markets.js"></script>
-    <script src="https://unpkg.com/html5-qrcode"></script>
-    <script src="./js/app.js"></script>
-    <script src="./js/history.js"></script>
-    <script src="./js/database.js"></script>
-
-</body>
-</html>
+/* ==========================================================
+    01 - VARIABLES - VARIAVEIS GLOBAIS DO SISTEMA 
+   ========================================================== */
+:root {
+  /* CORES PRINCIPAIS */
+  --primary: #16a34a;
+  --primary-hover: #15803d;
+  --primary-light: #f0fdf4;
+  /* ESTADOS */
+  --danger: #ef4444;
+  --danger-light: #fef2f2;
+  /* SUPERFICIES */
+  --background: #f8fafc;
+  --surface: #ffffff;
+  /* TEXTOS */
+  --text: #0f172a;
+  --text-secondary: #64748b;
+  /*ESTRUTURA  */
+  --border: #e2e8f0;
+  --radius: 14px;
+  /* SOMBRAS */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md:
+    0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --shadow-lg:
+    0 10px 15px -3px rgba(15, 23, 42, 0.05),
+    0 4px 6px -4px rgba(15, 23, 42, 0.05);
+}
+
+* {
+  overflow-wrap: break-word;
+}
+
+/* ============================================================
+    02 - RESET CSS - ZERA OS COMPORTAMENTOS PADRÕES DO SISTEMA 
+   ============================================================ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family:
+    "Inter",
+    -apple-system,
+    sans-serif;
+}
+
+html,
+body {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  background: var(--background);
+  color: var(--text);
+  -webkit-tap-highlight-color: transparent;
+  letter-spacing: -0.01em;
+}
+
+/* ============================================================
+    03 - LAYOUT DO SISTEMA  
+   ============================================================ */
+.app-layout {
+  width: 100%;
+  max-width: 480px;
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+.main-header {
+  text-align: center;
+  margin: 15px 0 25px 0;
+}
+.main-header h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.02em;
+}
+
+/* ==========================================================
+   04 - COMPONENTS CSS  - COMPONENTES GENERICOS 
+   ========================================================== */
+
+/* BOTÃO VOLTAR FLUTUANTE */
+.btn-back {
+  background: #f1f5f9 !important;
+  color: #475569 !important;
+  padding: 10px 16px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border-radius: 30px;
+  width: auto;
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 20px;
+  border: 1px solid var(--border) !important;
+  box-shadow: var(--shadow-sm);
+}
+
+.card {
+  background: var(--surface);
+  padding: 24px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border);
+}
+
+.card h2 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--primary);
+}
+
+label {
+  display: block;
+  margin-top: 14px;
+  margin-bottom: 6px;
+  font-weight: 500;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  text-transform: uppercase; /* Estilo de micro-label profissional */
+  letter-spacing: 0.05em;
+}
+
+/* Estilização minimalista de Inputs (Estilo iOS/Clean Web) */
+input,
+select {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-size: 15px;
+  background-color: var(--surface);
+  color: var(--text);
+  transition: all 0.2s;
+  color-scheme: light;
+}
+
+input,
+select,
+button {
+  max-width: 100%;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: var(--primary);
+  background-color: var(--surface);
+  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+}
+
+select:invalid {
+  color: #94a3b8 !important;
+}
+
+select option {
+  color: var(--text);
+  background: var(--surface);
+}
+
+select option[value=""] {
+  color: #94a3b8;
+}
+
+/* BOTÕES DE OPERAÇÃO PRINCIPAL */
+button {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  background: var(--primary);
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: var(--shadow-sm);
+}
+
+button:hover {
+  background: var(--primary-hover);
+}
+
+button:active {
+  transform: scale(0.99);
+}
+
+.btn-direct-add:hover {
+  background: #0369a1 !important;
+}
+
+.btn-success {
+  background: #16a34a;
+  color: white;
+}
+
+.btn-success {
+  background: #16a34a;
+  color: white;
+}
+
+.btn-success:hover {
+  background: #15803d;
+}
+
+.btn-danger {
+  background: #f1f5f9;
+  color: #475569;
+  box-shadow: none;
+  border: 1px solid var(--border);
+}
+
+.btn-danger:hover {
+  background: #e2e8f0;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* TESTE PARA VER OS CAMPOS DE ESCOLHER VARIAS OP */
+
+/* ==========================================================
+   SELECT PERSONALIZADO
+   ========================================================== */
+
+.custom-select {
+  position: relative;
+  width: 100%;
+}
+
+/* Campo fechado */
+.custom-select-selected {
+  width: 100%;
+  min-height: 46px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text);
+
+  display: flex;
+  align-items: center;
+
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.custom-select-selected:hover {
+  border-color: #cbd5e1;
+}
+
+.custom-select.open .custom-select-selected {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+}
+
+/* Texto */
+.custom-select-selected .selected-text {
+  margin-left: 6px;
+}
+
+/* Seta */
+.custom-select-selected .arrow {
+  margin-left: auto;
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+/* Menu aberto */
+.custom-select-options {
+  display: none;
+
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+
+  background: var(--surface);
+  color: var(--text);
+
+  border: 1px solid var(--border);
+  border-radius: 12px;
+
+  box-shadow: var(--shadow-md);
+
+  overflow: hidden;
+  z-index: 1000;
+}
+
+/* Opções */
+.custom-select-options div {
+  padding: 13px 14px;
+
+  color: var(--text);
+  background: var(--surface);
+
+  cursor: pointer;
+}
+
+/* Hover */
+.custom-select-options div:hover {
+  background: var(--primary-light);
+}
+
+/* Quando aberto */
+.custom-select.open .custom-select-options {
+  display: block;
+}
+
+/* No modal de item avulso, a lista ocupa espaço abaixo do campo e pode ser
+   rolada. Assim as últimas unidades não ficam escondidas atrás da borda da
+   tela em celulares menores. */
+#add-product-modal .modal-card {
+  max-width: 400px !important;
+}
+
+#add-product-modal .modal-unit-select .custom-select-options {
+  position: static;
+  margin-top: 6px;
+  max-height: 180px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Seletor de mercado na finalização: usa o mesmo padrão visual dos campos
+   de unidade e limita a lista para não ultrapassar o modal. */
+#checkout-market-dropdown {
+  margin-top: 14px;
+}
+
+#checkout-market-dropdown .custom-select-options {
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+#checkout-market-dropdown.is-empty .custom-select-selected {
+  cursor: default;
+  opacity: 0.7;
+}
+
+/* ==========================================================
+   05 - DASHBOARD & BANNERS - TELA INICIAL  
+   ========================================================== */
+
+/* controla o container da tela inicial. */
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  animation: fadeIn 0.2s ease-out;
+}
+
+/* Banner de Boas-Vindas da Home */
+.welcome-banner {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 20px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 20px;
+  border-left: 4px solid var(--primary); /* Detalhe lateral de app moderno */
+}
+.welcome-banner p {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+}
+.welcome-banner h2 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.02em;
+}
+
+/* botão dos cards da home. */
+.menu-btn {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px;
+  text-align: left;
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.menu-btn:hover {
+  border-color: #cbd5e1;
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+.menu-btn:active {
+  transform: scale(0.98);
+  background: #f1f5f9;
+}
+
+.menu-icon {
+  font-size: 1.8rem;
+  background: #f1f5f9;
+  padding: 10px;
+  border-radius: 10px;
+}
+.menu-text h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+
+.menu-text p {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-weight: 400;
+}
+
+#name-search-modal .modal-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+#name-search-modal .modal-card h3 {
+  margin-bottom: 16px;
+}
+
+#name-search-modal .modal-card label {
+  margin: 0 0 6px 0;
+}
+
+#name-search-modal .modal-card input {
+  margin-bottom: 12px;
+}
+
+#name-search-modal .modal-card button {
+  margin: 0 0 10px 0;
+}
+
+#name-search-modal .modal-card .btn-modal-cancel {
+  margin-bottom: 0;
+}
+
+#scanner-modal #reader {
+  margin-bottom: 14px;
+}
+
+#scanner-modal .btn-modal-cancel {
+  margin-top: 0;
+}
+
+/* =========================================
+   MODAL DE BUSCA DE PRODUTO
+========================================= */
+
+#product-search-modal .search-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+#product-search-modal .search-card button {
+  display: block;
+  width: 100%;
+  min-height: 46px;
+  margin: 0;
+  border-radius: 12px;
+}
+
+/* Título */
+#product-search-modal .search-card h3 {
+  margin-bottom: 24px;
+}
+/* Último botão não precisa de margem */
+#product-search-modal .search-card button:last-child {
+  margin-bottom: 0;
+}
+
+/* Botões de busca */
+#product-search-modal .search-option {
+  background: #16a34a;
+  color: white;
+}
+
+/* Cancelar */
+#product-search-modal .btn-modal-cancel {
+  background: #f1f3f5;
+  color: #555;
+}
+
+/* Efeito ao passar o mouse */
+#product-search-modal .search-card button:hover {
+  transform: translateY(-1px);
+}
+
+/* ==========================================================
+    06 - PRODUCTS CSS
+   ========================================================== */
+
+/* container dos produtos da comparação. */
+.products {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+/* Esse botão pertence à ação principal da comparação. */
+#compareButton {
+  margin-top: 15px;
+  padding: 16px;
+  font-size: 16px;
+}
+
+/* Esse botão existe dentro do resultado/comparação. */
+.btn-direct-add {
+  margin-top: 16px;
+  padding: 10px;
+  font-size: 0.85rem;
+  background: #0284c7 !important; /* Azul moderno corporativo */
+  border-radius: 8px;
+}
+
+.btn-direct-add:hover {
+  background: #0369a1 !important;
+}
+
+/* RESULTADO DA COMPARAÇÃO */
+.result-card {
+  text-align: center;
+  border-top: 4px solid var(--primary);
+  animation: scaleUp 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.result-card h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.result-card p {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.result-card strong {
+  color: var(--text);
+  font-size: 1.1rem;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.btn-delete {
+  width: 34px !important;
+  height: 34px !important;
+  background: none !important;
+  color: #888;
+  font-size: 18px;
+  box-shadow: none !important;
+}
+
+.cart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+/* BOTAO LIXEIRA - CARRINHO */
+.btn-clear-cart {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f1f5f9;
+  color: #64748b;
+  border: 1px solid var(--border);
+  box-shadow: none;
+  font-size: 16px;
+}
+
+.btn-clear-cart:hover {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.btn-clear-cart:hover {
+  color: #ef4444 !important;
+}
+
+.cart-total-items {
+  margin-top: 5px;
+  margin-bottom: 13px;
+  font-size: 0.85rem;
+  color: #9ca3af;
+}
+
+#finish-shopping-btn {
+  margin-top: 16px;
+}
+
+.btn-delete-alone:hover {
+  background: #e8e8e8;
+}
+
+.qty-value {
+  width: 20px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.btn-delete-alone:hover {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.cart-total {
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.cart-total span {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.cart-total h2 {
+  margin: 6px 0;
+  font-size: 2rem;
+  color: var(--primary);
+}
+
+.cart-total small {
+  color: #94a3b8;
+  font-size: 0.85rem;
+}
+
+/* NOVA INTERFACE CONSULTA DE PRODUTOS COM CODIGO DE BARRAS  */
+
+.input-with-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.input-with-button input {
+  flex: 1 1 auto;
+  min-width: 0;
+  width: auto;
+}
+
+.input-with-button .barcode-btn {
+  flex: 0 0 45px !important;
+  width: 45px !important;
+  min-width: 45px !important;
+  max-width: 45px !important;
+
+  height: 45px !important;
+  min-height: 45px !important;
+  max-height: 45px !important;
+
+  padding: 0 !important;
+  margin: 0 !important;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 12px;
+  background: var(--primary);
+  color: white;
+  border: none;
+}
+
+.barcode-btn i {
+  font-size: 20px;
+}
+
+.barcode-btn:hover {
+  transform: scale(1.05);
+  background: #15803d;
+}
+
+.barcode-btn:hover {
+  transform: scale(1.05);
+}
+
+/* ==========================================================
+   07 - CART.CSS - CARRINHO 
+   ========================================================== */
+/* ESTRUTURA PRINCIPAL DO CARRINHO - RESPONSAVEL PELO CONTAINER DA TELA */
+.cart-box {
+  display: flex;
+  flex-direction: column;
+  min-height: 550px;
+}
+
+/* LISTA DE PRODUTOS */
+
+#cart-list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+#cart-list li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 18px;
+  padding: 16px 0;
+  border-bottom: 1px dashed var(--border);
+}
+
+#cart-list li span {
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+/* AREA DO ITEM - PARTES INTERNAS DOS PRODUTOS */
+
+.cart-item-row {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.cart-item-left {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cart-item-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.cart-item-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text);
+  padding-right: 15px;
+}
+
+/* CABEÇALHO DO CARRINHO */
+.cart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cart-header h2 {
+  margin: 0;
+  color: var(--primary);
+}
+/* mexe no layout do cabecalho do carrinho */
+.cart-header-actions {
+  display: flex;
+  gap: 12px;
+  margin-left: auto;
+}
+
+.cart-header > div {
+  flex: 1;
+}
+
+.cart-box h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 1 !important;
+  font-size: 1.25rem;
+  border-bottom: none !important;
+}
+
+/* Botão "+" Redondo e Calibrado no Canto Direito */
+button.btn-add-plus {
+  width: 32px !important;
+  height: 32px !important;
+  min-width: 32px !important;
+  max-width: 32px !important;
+  min-height: 32px !important;
+  max-height: 32px !important;
+  padding: 0 !important;
+  border-radius: 50% !important;
+  background: var(--primary) !important;
+  color: #ffffff !important;
+  font-size: 1.1rem !important;
+  font-weight: 700 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: var(--shadow-sm) !important;
+  cursor: pointer !important;
+  border: none !important;
+  margin: 0 !important;
+  margin-top: 0 !important;
+  margin-left: auto !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+button.btn-add-plus:hover {
+  background: var(--primary-hover) !important;
+  transform: scale(1.08);
+}
+
+button.btn-add-plus:active {
+  transform: scale(0.95);
+}
+
+button.btn-cart-barcode {
+  font-size: 0.85rem !important;
+}
+
+/* PREÇO E EXCLUSÃO */
+
+.btn-delete {
+  width: 24px !important;
+  height: 24px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none !important;
+  color: #94a3b8 !important;
+  padding: 0 !important;
+  font-size: 1rem;
+  box-shadow: none !important;
+  transition: color 0.2s;
+}
+
+.btn-delete:hover {
+  color: var(--danger) !important;
+}
+
+/* RODAPE DO CARRINHO
+ */
+.cart-footer {
+  margin-top: auto;
+  padding-top: 20px;
+  border-top: 1px solid #ececec;
+}
+
+.cart-total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.cart-total-row span {
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.cart-total-row strong {
+  font-size: 2rem;
+  color: var(--primary);
+}
+
+.cart-footer strong span {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+#cart-total {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+/* CONTROLA O CARRINHO (+,-, ALTERAÇÃO DE QUANTIDADE) */
+.btn-qty {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.btn-qty:hover {
+  transform: scale(1.08);
+}
+
+.btn-qty:active {
+  transform: scale(0.95);
+}
+
+/* BOTAO LIXEIRA - CARRINHO */
+.btn-clear-cart {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f1f5f9;
+  color: #64748b;
+  border: 1px solid var(--border);
+  box-shadow: none;
+  font-size: 16px;
+}
+
+.btn-clear-cart:hover {
+  background: #fee2e2;
+  color: #ef4444 !important;
+}
+
+.cart-total-items {
+  margin-top: 5px;
+  margin-bottom: 13px;
+  font-size: 0.85rem;
+  color: #9ca3af;
+}
+
+#finish-shopping-btn {
+  margin-top: 16px;
+}
+
+.qty-value {
+  width: 20px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.item-price {
+  margin-top: 4px;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+/* ==========================================================
+   08 - SETTINGS - CONFIGURAÇÃO/PERFIL DO USUARIO 
+   ========================================================== */
+
+/*  SWITCH (TEMA) */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 26px;
+  flex-shrink: 0;
+}
+
+.switch input {
+  display: none;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background: #cbd5e1;
+  border-radius: 30px;
+  transition: 0.3s;
+}
+
+.slider:before {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  left: 3px;
+  bottom: 3px;
+  background: white;
+  border-radius: 50%;
+  transition: 0.3s;
+}
+
+.switch input:checked + .slider {
+  background: var(--primary);
+}
+
+.switch input:checked + .slider:before {
+  transform: translateX(24px);
+}
+
+/* PERFIL */
+
+.profile-settings {
+  background: var(--surface);
+  margin-bottom: 25px;
+  border-radius: 18px;
+  padding: 22px 18px;
+  box-shadow: var(--shadow-md);
+}
+
+.profile-top {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 30px;
+}
+
+.profile-avatar {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--primary);
+}
+
+.avatar-container {
+  position: relative;
+  width: 90px;
+  height: 90px;
+  cursor: pointer;
+}
+
+.avatar-edit-overlay {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: white;
+  backdrop-filter: blur(3px);
+}
+
+.avatar-container:hover .avatar-edit-overlay {
+  background: rgba(0, 0, 0, 0.65);
+  transform: scale(1.08);
+}
+
+.profile-name {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.profile-name strong {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.profile-name span {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+/* CARDS CONFIGURAÇÃO */
+.settings-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 18px;
+  margin-bottom: 15px;
+  box-shadow: var(--shadow-md);
+  margin-top: 25px;
+}
+
+#screen-settings:not(.hidden) {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+#screen-settings .btn-back {
+  align-self: flex-start;
+  margin-bottom: 4px;
+}
+
+#screen-settings .settings-card {
+  width: 100%;
+  margin: 0;
+}
+
+#screen-settings .settings-row + .settings-row {
+  border-top: 1px solid var(--border);
+}
+
+.settings-card h3 {
+  color: var(--primary);
+  font-size: 0.95rem;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 10px;
+}
+
+.settings-description {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+}
+
+.section-title {
+  color: var(--primary);
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.settings-card input:disabled {
+  background: var(--background);
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.settings-card .primary-button {
+  margin-top: 25px;
+}
+
+/* LINHAS DAS CONFIGURAÇÕES */
+
+.settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 60px;
+}
+
+.setting-label {
+  font-size: 0.95rem;
+  color: var(--text);
+}
+
+.setting-value {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  max-width: 60%;
+}
+
+.setting-value span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/*  TEMA */
+.theme-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  min-height: 45px;
+}
+
+/*  BOTÕES */
+
+.edit-button {
+  width: 32px !important;
+  height: 32px;
+  padding: 0 !important;
+  background: transparent !important;
+  color: var(--text);
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: none;
+}
+
+.edit-button:hover {
+  background: none !important;
+  transform: scale(1.1);
+}
+
+.logout-button {
+  background: transparent !important;
+  color: #ef4444 !important;
+  border: 1px solid #ef4444 !important;
+  margin-bottom: 20px;
+}
+
+.logout-button:hover {
+  background: #fef2f2 !important;
+}
+
+/* SENHA */
+
+.password-card h3 {
+  color: var(--text);
+}
+
+.password-card input {
+  margin-bottom: 12px;
+}
+
+.password-card .btn-modal-confirm {
+  background: var(--primary) !important;
+}
+
+.password-card .btn-modal-confirm:hover {
+  background: var(--primary-hover) !important;
+}
+
+/* MODAL SENHA */
+#name-modal .modal-buttons {
+  margin-top: 16px;
+}
+
+#market-modal .modal-buttons {
+  margin-top: 25px;
+}
+
+/* ==========================================================
+   09 - HISTORICO DE COMPRAS 
+   ========================================================== */
+
+#history-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 20px;
+}
+
+.history-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 15px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.history-date {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.history-total {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.history-footer {
+  display: flex;
+  justify-content: space-between;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.history-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  gap: 20px;
+}
+
+.history-top strong {
+  font-size: 1rem;
+}
+
+.history-top span {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  font-weight: 400;
+  margin-left: auto;
+}
+
+.history-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.history-bottom span {
+  color: var(--text-secondary);
+}
+
+.empty-message {
+  list-style: none;
+  text-align: center;
+  padding: 30px;
+  color: var(--text-secondary);
+}
+
+/* ================================
+   DETALHES DO HISTÓRICO
+================================ */
+
+.history-details-card {
+  padding: 18px;
+}
+
+.history-detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.history-detail-header h2 {
+  font-size: 18px;
+  margin: 0;
+}
+
+.history-detail-header span {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.detail-market-box {
+  background: var(--background);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 12px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.history-details-card h3 {
+  margin-top: 30px !important;
+  margin-bottom: 12px;
+}
+
+.detail-product-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.detail-product-list li {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.detail-product-list strong {
+  color: var(--text);
+  font-size: 14px;
+}
+
+.detail-product-list p {
+  margin: 5px 0 0;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.history-total {
+  margin-top: 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 15px;
+}
+
+.history-total strong {
+  color: var(--primary);
+  font-size: 18px;
+}
+
+/* ==========================================================
+   10 - INTERAÇÕES DA INTERFACE
+   ========================================================== */
+
+/* MENSAGEM DE ERRO */
+.error-msg {
+  margin-top: 14px;
+  padding: 12px;
+  background: var(--danger-light);
+  color: var(--danger);
+  border-radius: 10px;
+  text-align: center;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border: 1px solid #fecaca;
+}
+
+/* MODAL */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.3);
+  backdrop-filter: blur(6px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+  overflow-y: auto;
+  z-index: 9999;
+}
+
+.modal-card {
+  background: var(--surface);
+  padding: 28px;
+  border-radius: 20px;
+  box-shadow: var(--shadow-lg);
+  max-width: 340px;
+  width: calc(100% - 40px);
+  max-height: calc(100dvh - 32px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  text-align: center;
+  border: 1px solid var(--border);
+}
+
+.scanned-product-card {
+  max-width: 400px;
+  text-align: left;
+}
+
+.scanned-product-summary {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px;
+  margin: 14px 0 10px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--background);
+}
+
+#scanned-product-image,
+.scanned-product-placeholder {
+  flex: 0 0 64px;
+  width: 64px;
+  height: 64px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.scanned-product-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary);
+  background: var(--primary-light);
+  font-size: 1.5rem;
+}
+
+.scanned-product-details {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.scanned-product-details strong,
+.scanned-product-details span,
+.scanned-product-details small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.scanned-product-details strong {
+  color: var(--text);
+  font-size: 0.95rem;
+}
+
+.scanned-product-details span,
+.scanned-product-details small {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+}
+
+.scanned-product-status {
+  margin: 0 0 10px !important;
+  text-align: left;
+}
+
+.modal-icon {
+  font-size: 2.2rem;
+  margin-bottom: 8px;
+}
+
+.modal-card h3 {
+  margin-bottom: 6px;
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+.modal-card p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-bottom: 22px;
+  line-height: 1.4;
+}
+
+.modal-link-text {
+  margin-top: 18px;
+  margin-bottom: 8px;
+  text-align: center;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+/* BOTOES MODAIS */
+.btn-modal-confirm {
+  background: var(--danger) !important;
+}
+
+.btn-modal-confirm:hover {
+  background: #dc2626 !important;
+}
+
+.btn-modal-cancel {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.btn-modal-cancel:hover {
+  background: #e2e8f0;
+}
+
+.btn-modal-secondary {
+  width: 100%;
+  margin-top: 18px;
+  margin-bottom: 18px;
+  background: transparent;
+  border: none;
+  color: var(--primary-color);
+  font-weight: 600;
+  padding: 10px;
+  border-radius: 8px;
+  transition: 0.2s;
+}
+
+.btn-modal-secondary:hover {
+  background: rgba(34, 197, 94, 0.1);
+}
+
+/* CONTAINER DOS BOTÕES DO MODAL */
+.modal-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.modal-buttons button {
+  flex: 1;
+  margin: 0 !important;
+}
+
+/* NOTIFICAÇÕES DO SISTEMA - TOAST */
+.toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #0f172a;
+  color: #ffffff;
+  padding: 12px 24px;
+  border-radius: 40px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+  z-index: 10000;
+  font-weight: 500;
+  font-size: 0.9rem;
+  text-align: center;
+  white-space: nowrap;
+  animation: slideUpFade 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.toast.error {
+  background: #b91c1c !important;
+  color: #ffffff !important;
+  border: 1px solid #f87171;
+  box-shadow: 0 10px 25px -5px rgba(239, 68, 68, 0.4);
+}
+
+/* ==========================================================
+   11 - AUTH - AUTENTICAÇÕES (LOGIN E CADRASTRO)
+   ========================================================== */
+
+/* CARD LOGIN */
+.auth-card {
+  padding: 28px !important;
+}
+
+.auth-subtitle {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+}
+
+/* DIVISOR */
+.divider {
+  text-align: center;
+  margin: 18px 0;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  position: relative;
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 40%;
+  height: 1px;
+  background: var(--border);
+}
+
+.divider::before {
+  left: 0;
+}
+.divider::after {
+  right: 0;
+}
+
+/* BOTÃO GOOGLE */
+.btn-google {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  background: #fff !important;
+  color: #1e293b !important;
+  border: 1px solid #cbd5e1 !important;
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-google:hover {
+  background: #f8fafc !important;
+  border-color: #94a3b8 !important;
+}
+
+.google-icon {
+  font-size: 1.2rem;
+}
+
+/* ALTERNÂNCIA LOGIN / CADASTRO */
+.auth-switch-text {
+  text-align: center;
+  font-size: 0.85rem;
+  margin-top: 22px;
+  color: var(--text-secondary);
+}
+
+.auth-switch-text a {
+  color: #3b82f6 !important;
+  font-weight: 600;
+  text-decoration: none;
+  margin-left: 4px;
+}
+.auth-switch-text a:hover {
+  text-decoration: underline;
+}
+
+/* [data-theme="dark"] Botão do Google */
+[data-theme="dark"] .btn-google {
+  background: #1e293b !important;
+  color: #f8fafc !important;
+  border: 1px solid #334155 !important;
+}
+
+[data-theme="dark"] .btn-google:hover {
+  background: #334155 !important;
+}
+
+/* ==========================================================
+   12 - RESPONSIVE.CSS
+   ========================================================== */
+/* MOBILE PEQUENO */
+@media (max-width: 360px) {
+  .profile-top {
+    gap: 12px;
+  }
+  .profile-avatar {
+    width: 70px;
+    height: 70px;
+  }
+  .profile-name strong {
+    font-size: 1.05rem;
+  }
+}
+
+/* TABLET */
+@media (min-width: 768px) {
+  .app-layout {
+    padding-top: 40px;
+  }
+}
+
+/* ==========================================================
+   13 - DARK MODE
+   ========================================================== */
+
+[data-theme="dark"] {
+  --background: #0f172a;
+  --surface: #1e293b;
+  --text: #f8fafc;
+  --text-secondary: #94a3b8;
+  --border: #334155;
+  --primary-light: #14532d;
+  --danger-light: #7f1d1d;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="dark"] input,
+[data-theme="dark"] select {
+  background-color: #151f32;
+  color: #f8fafc;
+  color-scheme: dark;
+}
+
+[data-theme="dark"] select option {
+  background-color: #151f32;
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .custom-select-selected {
+  background: #151f32;
+  color: var(--text);
+}
