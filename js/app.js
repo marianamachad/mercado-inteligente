@@ -708,6 +708,8 @@ let selectedProduct = null;
 let scanner = null;
 let leituraEmAndamento = false;
 let ultimaMensagemBuscaProduto = "";
+let scannerDestination = "comparison";
+let produtoEscaneadoParaCarrinho = null;
 
 async function pararScanner(instanciaScanner) {
   if (!instanciaScanner) return;
@@ -736,6 +738,7 @@ async function encerrarScannerAtivo() {
 
 window.openProductSearch = function (productNumber) {
   selectedProduct = productNumber;
+  scannerDestination = "comparison";
 
   document.getElementById("product-search-modal").classList.remove("hidden");
 };
@@ -768,6 +771,14 @@ window.openScanner = async function () {
 
   document.getElementById("scanner-modal").classList.remove("hidden");
 
+  await startBarcodeScanner();
+};
+
+window.openCartBarcodeScanner = async function () {
+  scannerDestination = "cart";
+  selectedProduct = null;
+
+  document.getElementById("scanner-modal").classList.remove("hidden");
   await startBarcodeScanner();
 };
 
@@ -807,6 +818,12 @@ window.startBarcodeScanner = async function () {
 
           const produto = await buscarProdutoPorCodigo(codigo);
 
+          if (scannerDestination === "cart") {
+            document.getElementById("scanner-modal").classList.add("hidden");
+            openScannedProductModal(produto || criarProdutoManual(codigo));
+            return;
+          }
+
           if (!produto) {
             showToast(
               ultimaMensagemBuscaProduto || "Produto não encontrado.",
@@ -845,6 +862,116 @@ window.startBarcodeScanner = async function () {
 window.closeScanner = async function () {
   await encerrarScannerAtivo();
   document.getElementById("scanner-modal").classList.add("hidden");
+};
+
+function criarProdutoManual(codigo) {
+  return {
+    codigo_barras: String(codigo || "").replace(/\D/g, ""),
+    nome: "",
+    marca: null,
+    imagem_url: null,
+    categoria: null,
+    unidade_base: "un",
+    quantidade: 1,
+    naoEncontradoNaBase: true,
+  };
+}
+
+function formatarMedidaProduto(produto) {
+  const quantidade = Number(produto.quantidade);
+  const unidade = produto.unidade_base || "un";
+
+  if (!Number.isFinite(quantidade) || quantidade <= 0) return "";
+
+  return `${quantidade} ${unidade}`;
+}
+
+function openScannedProductModal(produto) {
+  produtoEscaneadoParaCarrinho = produto;
+
+  const nomeDoProduto = produto.nome || "Produto não identificado";
+  const imagem = document.getElementById("scanned-product-image");
+  const placeholder = document.getElementById("scanned-product-placeholder");
+
+  document.getElementById("scanned-product-title").textContent = nomeDoProduto;
+  document.getElementById("scanned-product-brand").textContent = produto.marca || "";
+  document.getElementById("scanned-product-info").textContent =
+    formatarMedidaProduto(produto) || produto.categoria || "";
+  document.getElementById("scanned-product-code").textContent = produto.codigo_barras
+    ? `Código: ${produto.codigo_barras}`
+    : "";
+
+  const status = document.getElementById("scanned-product-status");
+  status.textContent = produto.naoEncontradoNaBase
+    ? "Este código ainda não está na base pública. Informe o nome, o preço e a quantidade para cadastrá-lo no seu carrinho."
+    : "Confira as informações e informe o preço e a quantidade que deseja levar.";
+
+  const nameInput = document.getElementById("scanned-product-name");
+  nameInput.value = produto.nome || "";
+  document.getElementById("scanned-product-price").value = "";
+  document.getElementById("scanned-product-quantity").value = "1";
+
+  imagem.onerror = () => {
+    imagem.classList.add("hidden");
+    placeholder.classList.remove("hidden");
+  };
+
+  if (produto.imagem_url) {
+    imagem.src = produto.imagem_url;
+    imagem.classList.remove("hidden");
+    placeholder.classList.add("hidden");
+  } else {
+    imagem.removeAttribute("src");
+    imagem.classList.add("hidden");
+    placeholder.classList.remove("hidden");
+  }
+
+  document.getElementById("scanned-product-modal").classList.remove("hidden");
+}
+
+window.closeScannedProductModal = function () {
+  document.getElementById("scanned-product-modal").classList.add("hidden");
+  produtoEscaneadoParaCarrinho = null;
+};
+
+window.addScannedProductToCart = async function () {
+  if (!produtoEscaneadoParaCarrinho) return;
+
+  const name = document.getElementById("scanned-product-name").value.trim();
+  const priceRaw = document.getElementById("scanned-product-price").value;
+  const cartQuantity = Number(
+    document.getElementById("scanned-product-quantity").value,
+  );
+  const price = Number(priceRaw);
+
+  if (!name || priceRaw === "" || !Number.isFinite(price) || price < 0) {
+    showToast("Informe o nome e um preço válido.", true);
+    return;
+  }
+
+  if (!Number.isInteger(cartQuantity) || cartQuantity < 1) {
+    showToast("Informe uma quantidade inteira maior que zero.", true);
+    return;
+  }
+
+  const quantidadePorItem = Number(produtoEscaneadoParaCarrinho.quantidade) || 1;
+  const product = {
+    name,
+    price,
+    quantity: quantidadePorItem * cartQuantity,
+    rawQuantity: quantidadePorItem * cartQuantity,
+    cartQuantity,
+    unit: produtoEscaneadoParaCarrinho.unidade_base || "un",
+    codigoBarras: produtoEscaneadoParaCarrinho.codigo_barras || null,
+  };
+
+  const sucesso = await adicionarItemCarrinho(product);
+
+  if (sucesso) {
+    await carregarCarrinho();
+    closeScannedProductModal();
+    showToast(`🛒 ${product.name} adicionado!`);
+  }
 };
 
 // BUSCA POR NOME
@@ -901,14 +1028,13 @@ window.openAddProductModal = function () {
   if (!addProductModal) return;
   document.getElementById("modal-add-name").value = "";
   document.getElementById("modal-add-price").value = "";
-  document.getElementById("modal-add-quantity").value = "";
-  document.getElementById("modal-add-unit").value = "";
-
-  const unitDropdown = document.getElementById("unit-dropdown");
-  if (unitDropdown) {
-    atualizarTextoSelecionado(unitDropdown, "Selecione");
-    unitDropdown.classList.remove("open");
-  }
+  document.getElementById("modal-add-quantity").value = "1";
+  document.getElementById("modal-add-unit").value = "un";
+  atualizarTextoSelecionado(
+    document.getElementById("modal-unit-dropdown"),
+    "Unidade (un)",
+  );
+  document.getElementById("modal-unit-dropdown").classList.remove("open");
 
   addProductModal.classList.remove("hidden");
 };
@@ -919,38 +1045,62 @@ window.closeAddProductModal = function () {
 
 // EVENTO BOTÃO NOVO PRODUTO
 const openAddModalBtn = document.getElementById("open-add-modal-btn");
+const openCartScannerBtn = document.getElementById("open-cart-scanner-btn");
 
 if (openAddModalBtn)
   openAddModalBtn.addEventListener("click", window.openAddProductModal);
 
+if (openCartScannerBtn)
+  openCartScannerBtn.addEventListener("click", window.openCartBarcodeScanner);
+
 // EVENTO BOTÃO NOVO PRODUTO
 window.saveDirectProductFromModal = async function () {
   const nameInput = document.getElementById("modal-add-name").value.trim();
-  const priceRaw = document.getElementById("modal-add-price").value;
-  const quantityRaw = document.getElementById("modal-add-quantity").value;
-  const unitInput = document
-    .getElementById("modal-add-unit")
-    .value.toLowerCase();
 
-  if (!priceRaw || !quantityRaw || !unitInput) {
-    showToast("⚠️ Dados incompletos.", true);
+  const priceRaw = document.getElementById("modal-add-price").value;
+
+  const quantityRaw = document.getElementById("modal-add-quantity").value;
+
+  const unitInput = document.getElementById("modal-add-unit").value || "un";
+
+  if (!priceRaw || !quantityRaw) {
+    showToast("⚠️ Informe o preço e a quantidade.", true);
     return;
   }
-  let finalPrice = Number(priceRaw);
+
+  const finalPrice = Number(priceRaw);
   const finalQuantity = Number(quantityRaw);
-  if (unitInput === "un") finalPrice = finalPrice * finalQuantity;
+
+  if (
+    !Number.isFinite(finalPrice) ||
+    finalPrice < 0 ||
+    !Number.isInteger(finalQuantity) ||
+    finalQuantity < 1
+  ) {
+    showToast("⚠️ Informe um preço válido e uma quantidade inteira maior que zero.", true);
+    return;
+  }
 
   const product = {
     name: nameInput || "Produto Avulso",
+
+    // Preço de UMA unidade
     price: finalPrice,
-    quantity:
-      typeof convertToBaseUnit === "function"
-        ? convertToBaseUnit(finalQuantity, unitInput)
-        : finalQuantity,
+
+    // Quantidade informada
+    quantity: finalQuantity,
+
+    // Diferencia itens avulsos de embalagens adicionadas pela comparação.
+    // Cada unidade informada deve aparecer individualmente no carrinho.
+    cartQuantity: finalQuantity,
+
     unit: unitInput,
+
     rawPrice: priceRaw,
+
     rawQuantity: quantityRaw,
   };
+
   const sucesso = await adicionarItemCarrinho(product);
 
   if (sucesso) {
@@ -1052,10 +1202,7 @@ window.scanBarcode = async function (numero) {
     const produto = await buscarProdutoPorCodigo(codigo);
 
     if (!produto) {
-      showToast(
-        ultimaMensagemBuscaProduto || "Produto não encontrado.",
-        true,
-      );
+      showToast(ultimaMensagemBuscaProduto || "Produto não encontrado.", true);
       return;
     }
 
@@ -1201,6 +1348,7 @@ async function buscarItemExistente(produtoId) {
 
 // ADICIONA UM PRODUTO À SACOLA
 
+// ADICIONA UM PRODUTO À SACOLA
 async function adicionarItemCarrinho(produto) {
   const produtoId = await obterOuCriarProduto(produto);
 
@@ -1208,8 +1356,6 @@ async function adicionarItemCarrinho(produto) {
     showToast("Erro ao localizar produto.", true);
     return false;
   }
-
-  const itemExistente = await buscarItemExistente(produtoId);
 
   const {
     data: { user },
@@ -1220,35 +1366,67 @@ async function adicionarItemCarrinho(produto) {
     return false;
   }
 
+  const itemExistente = await buscarItemExistente(produtoId);
+
+  // IMPORTANTE:
+  // Usa quantity como principal.
+  // Se não existir, usa rawQuantity.
+  const quantidadeAdicionada = Number(
+    produto.quantity ?? produto.rawQuantity ?? 1,
+  );
+
+  const precoUnitario = Number(produto.price);
+
+  if (!Number.isFinite(quantidadeAdicionada) || quantidadeAdicionada <= 0) {
+    showToast("Quantidade inválida.", true);
+    return false;
+  }
+
   let error;
-  // ATUALIZA ITEM EXISTENTE
+
+  // ==========================================================
+  // ITEM JÁ EXISTE NO CARRINHO
+  // ==========================================================
   if (itemExistente) {
+    const novaQuantidade =
+      Number(itemExistente.quantidade || 0) + quantidadeAdicionada;
+
+    const novoPrecoTotal = precoUnitario * novaQuantidade;
+
     const { error: updateError } = await supabaseClient
       .from("itens_lista")
       .update({
-        quantidade:
-          Number(itemExistente.quantidade) + Number(produto.rawQuantity),
-
-        quantidade_itens: Number(itemExistente.quantidade_itens || 1) + 1,
-
-        preco_total: Number(itemExistente.preco_total) + Number(produto.price),
+        quantidade: novaQuantidade,
+        quantidade_itens: novaQuantidade,
+        preco_total: novoPrecoTotal,
+        preco_unitario: precoUnitario,
       })
       .eq("id", itemExistente.id);
 
     error = updateError;
   }
-  // INSERE NOVO ITEM
+
+  // ==========================================================
+  // NOVO ITEM
+  // ==========================================================
   else {
     const { error: insertError } = await supabaseClient
       .from("itens_lista")
       .insert({
         user_id: user.id,
+
         nome: produto.name,
-        preco_total: Number(produto.price),
-        preco_unitario: Number(produto.price),
-        quantidade: Number(produto.rawQuantity),
-        quantidade_itens: 1,
+
+        preco_total: precoUnitario * quantidadeAdicionada,
+
+        preco_unitario: precoUnitario,
+
+        quantidade: quantidadeAdicionada,
+
+        quantidade_itens: quantidadeAdicionada,
+
         unidade: produto.unit,
+
         produto_id: produtoId,
       });
 
@@ -1261,7 +1439,6 @@ async function adicionarItemCarrinho(produto) {
     return false;
   }
 
-  // REGISTRA O HISTÓRICO
   await registrarHistorico(produto, produtoId);
 
   return true;
@@ -1303,12 +1480,16 @@ window.increaseItem = async function (id) {
 
   if (!item) return;
 
+  const quantidadeDeItens = Number(item.quantidade_itens || 1);
+  const quantidadePorItem = Number(item.quantidade || 0) / quantidadeDeItens;
+  const novaQuantidadeDeItens = quantidadeDeItens + 1;
+
   const { error } = await supabaseClient
     .from("itens_lista")
     .update({
-      quantidade_itens: Number(item.quantidade_itens || 1) + 1,
-
-      preco_total: Number(item.preco_total) + Number(item.preco_unitario),
+      quantidade: Number(item.quantidade || 0) + quantidadePorItem,
+      quantidade_itens: novaQuantidadeDeItens,
+      preco_total: Number(item.preco_unitario) * novaQuantidadeDeItens,
     })
     .eq("id", id);
 
@@ -1326,16 +1507,19 @@ window.decreaseItem = async function (id) {
 
   if (!item) return;
 
-  const novaQuantidade = Number(item.quantidade_itens || 1) - 1;
+  const quantidadeDeItens = Number(item.quantidade_itens || 1);
+  const novaQuantidade = quantidadeDeItens - 1;
 
   if (novaQuantidade <= 0) {
     await removerItemCarrinho(id);
   } else {
+    const quantidadePorItem = Number(item.quantidade || 0) / quantidadeDeItens;
+
     await supabaseClient
       .from("itens_lista")
       .update({
+        quantidade: Number(item.quantidade || 0) - quantidadePorItem,
         quantidade_itens: novaQuantidade,
-
         preco_total: Number(item.preco_unitario) * novaQuantidade,
       })
       .eq("id", id);
@@ -1439,7 +1623,7 @@ async function buscarProdutoPorCodigo(codigo) {
 
   const codigoNormalizado = String(codigo || "").replace(/\D/g, "");
 
-  if (!codigoNormalizado) {
+  if (!/^(?:\d{8}|\d{12,14})$/.test(codigoNormalizado)) {
     ultimaMensagemBuscaProduto = "Código de barras inválido.";
     return null;
   }
@@ -1454,8 +1638,20 @@ async function buscarProdutoPorCodigo(codigo) {
   try {
     console.log("Produto não está no cache. Consultando API...");
 
+    const campos = [
+      "code",
+      "product_name_pt",
+      "product_name",
+      "brands",
+      "image_front_url",
+      "image_url",
+      "categories",
+      "quantity",
+    ].join(",");
+
     const resposta = await fetch(
-      `https://world.openfoodfacts.org/api/v2/product/${codigoNormalizado}.json`,
+      `https://world.openfoodfacts.org/api/v2/product/${codigoNormalizado}.json?fields=${campos}`,
+      { headers: { Accept: "application/json" } },
     );
 
     if (resposta.status === 404) {
@@ -1528,11 +1724,15 @@ async function salvarProdutoNoCache(produto) {
     return (await buscarProdutoNoCache(produto.codigo_barras)) || produto;
   }
 
-  return normalizarProduto(produto.codigo_barras, data);
+  // A tabela de cache armazena os campos essenciais. Mantém a resposta
+  // completa da API nesta leitura para exibir foto, marca e medida no modal.
+  return produto;
 }
 
 function normalizarProduto(codigo, produto) {
-  const quantidadeInformada = Number(produto.quantidade);
+  const quantidadeInformada = Number(
+    produto.quantidade ?? produto.product_quantity,
+  );
   const quantidade =
     Number.isFinite(quantidadeInformada) && quantidadeInformada > 0
       ? quantidadeInformada
@@ -1546,7 +1746,11 @@ function normalizarProduto(codigo, produto) {
       produto.product_name ||
       "Produto sem nome",
     marca: produto.marca || produto.brands || null,
-    imagem_url: produto.imagem_url || produto.image_url || produto.image_front_url || null,
+    imagem_url:
+      produto.imagem_url ||
+      produto.image_url ||
+      produto.image_front_url ||
+      null,
     categoria: produto.categoria || produto.categories || null,
     unidade_base: produto.unidade_base || obterUnidadeProduto(produto),
     quantidade,
@@ -1554,7 +1758,9 @@ function normalizarProduto(codigo, produto) {
 }
 
 function obterUnidadeProduto(produto) {
-  const quantidade = (produto.quantity || "").toLowerCase();
+  const quantidade = String(
+    produto.quantidade ?? produto.product_quantity ?? produto.quantity ?? "",
+  ).toLowerCase();
 
   if (quantidade.includes("kg")) {
     return "g";
@@ -1576,7 +1782,9 @@ function obterUnidadeProduto(produto) {
 }
 
 function obterQuantidadeProduto(produto) {
-  const quantidade = produto.quantity || "";
+  const quantidade = String(
+    produto.quantidade ?? produto.product_quantity ?? produto.quantity ?? "",
+  );
 
   const match = quantidade.match(/[\d.,]+/);
 
