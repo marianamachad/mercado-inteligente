@@ -958,8 +958,10 @@ window.addScannedProductToCart = async function () {
   const product = {
     name,
     price,
-    quantity: quantidadePorItem * cartQuantity,
-    rawQuantity: quantidadePorItem * cartQuantity,
+    // A leitura informa o conteúdo de uma embalagem (por exemplo, 2 L).
+    // A quantidade desejada é controlada separadamente no carrinho.
+    quantity: quantidadePorItem,
+    rawQuantity: quantidadePorItem,
     cartQuantity,
     unit: produtoEscaneadoParaCarrinho.unidade_base || "un",
     codigoBarras: produtoEscaneadoParaCarrinho.codigo_barras || null,
@@ -1028,6 +1030,7 @@ window.openAddProductModal = function () {
   if (!addProductModal) return;
   document.getElementById("modal-add-name").value = "";
   document.getElementById("modal-add-price").value = "";
+  document.getElementById("modal-add-measure").value = "1";
   document.getElementById("modal-add-quantity").value = "1";
   document.getElementById("modal-add-unit").value = "un";
   atualizarTextoSelecionado(
@@ -1059,25 +1062,30 @@ window.saveDirectProductFromModal = async function () {
 
   const priceRaw = document.getElementById("modal-add-price").value;
 
-  const quantityRaw = document.getElementById("modal-add-quantity").value;
+  const measureRaw = document.getElementById("modal-add-measure").value;
+
+  const cartQuantityRaw = document.getElementById("modal-add-quantity").value;
 
   const unitInput = document.getElementById("modal-add-unit").value || "un";
 
-  if (!priceRaw || !quantityRaw) {
-    showToast("⚠️ Informe o preço e a quantidade.", true);
+  if (!priceRaw || !measureRaw || !cartQuantityRaw) {
+    showToast("⚠️ Informe o preço, a medida e a quantidade.", true);
     return;
   }
 
   const finalPrice = Number(priceRaw);
-  const finalQuantity = Number(quantityRaw);
+  const measurePerItem = Number(measureRaw);
+  const cartQuantity = Number(cartQuantityRaw);
 
   if (
     !Number.isFinite(finalPrice) ||
     finalPrice < 0 ||
-    !Number.isInteger(finalQuantity) ||
-    finalQuantity < 1
+    !Number.isFinite(measurePerItem) ||
+    measurePerItem <= 0 ||
+    !Number.isInteger(cartQuantity) ||
+    cartQuantity < 1
   ) {
-    showToast("⚠️ Informe um preço válido e uma quantidade inteira maior que zero.", true);
+    showToast("⚠️ Informe uma medida válida e uma quantidade inteira maior que zero.", true);
     return;
   }
 
@@ -1087,18 +1095,15 @@ window.saveDirectProductFromModal = async function () {
     // Preço de UMA unidade
     price: finalPrice,
 
-    // Quantidade informada
-    quantity: finalQuantity,
-
-    // Diferencia itens avulsos de embalagens adicionadas pela comparação.
-    // Cada unidade informada deve aparecer individualmente no carrinho.
-    cartQuantity: finalQuantity,
+    // Conteúdo de cada embalagem/item. Ex.: 2 L por garrafa.
+    quantity: measurePerItem,
+    rawQuantity: measurePerItem,
+    cartQuantity,
 
     unit: unitInput,
 
     rawPrice: priceRaw,
 
-    rawQuantity: quantityRaw,
   };
 
   const sucesso = await adicionarItemCarrinho(product);
