@@ -70,6 +70,26 @@ async function carregarCarrinho() {
 // Caso não exista, cria um novo registro e retorna seu ID.
 async function obterOuCriarProduto(produto) {
 
+    const codigoBarras = String(
+        produto.codigoBarras || produto.codigo_barras || ""
+    ).replace(/\D/g, "");
+
+    // O código de barras é a identificação mais precisa. Quando ele estiver
+    // disponível, prioriza o item já salvo pelo scanner antes da busca por nome.
+    if (codigoBarras) {
+        const { data: produtoPorCodigo, error: erroCodigo } = await supabaseClient
+            .from("produtos")
+            .select("id")
+            .eq("codigo_barras", codigoBarras)
+            .maybeSingle();
+
+        if (erroCodigo) {
+            console.error(erroCodigo);
+        } else if (produtoPorCodigo) {
+            return produtoPorCodigo.id;
+        }
+    }
+
     // Padroniza o nome para facilitar a busca
     const nomeLimpo = produto.name
         .toLowerCase()
@@ -89,6 +109,17 @@ async function obterOuCriarProduto(produto) {
 
     // Produto encontrado
     if (existentes && existentes.length > 0) {
+        if (codigoBarras) {
+            const { error: erroAtualizacaoCodigo } = await supabaseClient
+                .from("produtos")
+                .update({ codigo_barras: codigoBarras })
+                .eq("id", existentes[0].id);
+
+            if (erroAtualizacaoCodigo) {
+                console.error(erroAtualizacaoCodigo);
+            }
+        }
+
         return existentes[0].id;
     }
 
@@ -101,7 +132,8 @@ async function obterOuCriarProduto(produto) {
         .from("produtos")
         .insert({
             nome: produto.name,
-            unidade_base: produto.unit
+            unidade_base: produto.unit,
+            codigo_barras: codigoBarras || null
         })
         .select("id")
         .single();
@@ -151,6 +183,22 @@ async function buscarItemExistente(produtoId) {
 // Caso contrário, cria um novo item no carrinho.
 async function adicionarItemCarrinho(produto) {
 
+    const quantidadeDoCarrinho = Number(produto.cartQuantity ?? 1);
+    const quantidadeDoProduto = Number(produto.rawQuantity ?? produto.quantity ?? 1);
+    const precoPorItem = Number(produto.price);
+
+    if (
+        !Number.isInteger(quantidadeDoCarrinho) ||
+        quantidadeDoCarrinho < 1 ||
+        !Number.isFinite(quantidadeDoProduto) ||
+        quantidadeDoProduto <= 0 ||
+        !Number.isFinite(precoPorItem) ||
+        precoPorItem < 0
+    ) {
+        showToast("Quantidade ou preço inválido.", true);
+        return false;
+    }
+
     // Obtém (ou cria) o produto na tabela de produtos
     const produtoId = await obterOuCriarProduto(produto);
 
@@ -184,14 +232,14 @@ async function adicionarItemCarrinho(produto) {
 
                 quantidade:
                     Number(itemExistente.quantidade) +
-                    Number(produto.rawQuantity),
+                    quantidadeDoProduto,
 
                 quantidade_itens:
-                    Number(itemExistente.quantidade_itens || 1) + 1,
+                    Number(itemExistente.quantidade_itens || 1) + quantidadeDoCarrinho,
 
                 preco_total:
                     Number(itemExistente.preco_total) +
-                    Number(produto.price)
+                    (precoPorItem * quantidadeDoCarrinho)
 
             })
             .eq("id", itemExistente.id);
@@ -208,10 +256,10 @@ async function adicionarItemCarrinho(produto) {
 
                 user_id: user.id,
                 nome: produto.name,
-                preco_total: Number(produto.price),
-                preco_unitario: Number(produto.price),
-                quantidade: Number(produto.rawQuantity),
-                quantidade_itens: 1,
+                preco_total: precoPorItem * quantidadeDoCarrinho,
+                preco_unitario: precoPorItem,
+                quantidade: quantidadeDoProduto,
+                quantidade_itens: quantidadeDoCarrinho,
                 unidade: produto.unit,
                 produto_id: produtoId
 
