@@ -607,6 +607,15 @@ Cancelar
     <div class="cart-header-actions">
 
         <button
+            id="open-cart-scanner-btn"
+            class="btn-add-plus btn-cart-barcode"
+            type="button"
+            aria-label="Escanear código de barras"
+            title="Escanear código de barras">
+            <i class="fa-solid fa-barcode"></i>
+        </button>
+
+        <button
             id="open-add-modal-btn"
             class="btn-add-plus">
             ＋
@@ -708,69 +717,89 @@ class="cart-total-items">
             <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 15px;">Adicione um produto direto no seu carrinho.</p>
             <label>Nome do Produto</label>
             <input id="modal-add-name" type="text" placeholder="Ex.: Feijão Camil">
-            <label>Preço (R$)</label>
+            <label>Preço por item (R$)</label>
             <input
                 id="modal-add-price"
                 type="number"
                 step="0.01"
                 min="0"
                 placeholder="0,00">
-            <label>Quantidade</label>
+            <label>Quantidade de itens</label>
             <input
                 id="modal-add-quantity"
                 type="number"
-                step="0.001"
-                min="0"
+                step="1"
+                min="1"
+                value="1"
                 placeholder="1">
-            <label>Unidade</label>
+            <label>Unidade de medida</label>
+            <div class="custom-select modal-unit-select" id="modal-unit-dropdown">
+                <div class="custom-select-selected">
+                    <span aria-hidden="true">📦</span>
+                    <span class="selected-text">Unidade (un)</span>
+                    <span class="arrow">▼</span>
+                </div>
 
-            <div class="custom-select" id="unit-dropdown">
+                <div class="custom-select-options">
+                    <div data-value="un">📦 Unidade (un)</div>
+                    <div data-value="kg">⚖️ Quilograma (kg)</div>
+                    <div data-value="g">⚖️ Grama (g)</div>
+                    <div data-value="l">💧 Litro (L)</div>
+                    <div data-value="ml">💧 Mililitro (ml)</div>
+                </div>
 
-    <div 
-        class="custom-select-selected"
-        onclick="toggleDropdown('unit-dropdown')">
-
-        ⚖️ <span id="unit-selected-text">Selecione</span>
-
-        <span class="arrow">▼</span>
-
-    </div>
-
-
-    <div class="custom-select-options">
-
-        <div onclick="selectOption('kg','Quilograma (kg)','unit')">
-            ⚖️ Quilograma (kg)
-        </div>
-
-        <div onclick="selectOption('g','Grama (g)','unit')">
-            ⚖️ Grama (g)
-        </div>
-
-        <div onclick="selectOption('l','Litro (L)','unit')">
-            💧 Litro (L)
-        </div>
-
-        <div onclick="selectOption('ml','Mililitro (ml)','unit')">
-            💧 Mililitro (ml)
-        </div>
-
-        <div onclick="selectOption('un','Unidade (un)','unit')">
-            📦 Unidade (un)
-        </div>
-
-    </div>
-
-
-    <input 
-        type="hidden"
-        id="modal-add-unit"
-        value="">
-
-</div>
+                <input type="hidden" id="modal-add-unit" value="un">
+            </div>
             <div class="modal-buttons" style="margin-top: 25px;">
                 <button onclick="saveDirectProductFromModal()" style="background: var(--primary);">Adicionar</button>
                 <button onclick="closeAddProductModal()" class="btn-modal-cancel">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="scanned-product-modal" class="modal-overlay hidden">
+        <div class="modal-card scanned-product-card">
+            <h3>Produto escaneado</h3>
+
+            <div class="scanned-product-summary">
+                <img id="scanned-product-image" class="hidden" alt="Foto do produto">
+                <div id="scanned-product-placeholder" class="scanned-product-placeholder" aria-hidden="true">
+                    <i class="fa-solid fa-box"></i>
+                </div>
+
+                <div class="scanned-product-details">
+                    <strong id="scanned-product-title">Produto</strong>
+                    <span id="scanned-product-brand"></span>
+                    <span id="scanned-product-info"></span>
+                    <small id="scanned-product-code"></small>
+                </div>
+            </div>
+
+            <p id="scanned-product-status" class="scanned-product-status"></p>
+
+            <label>Nome do produto</label>
+            <input id="scanned-product-name" type="text" placeholder="Ex.: Suco de manga">
+
+            <label>Preço por item (R$)</label>
+            <input
+                id="scanned-product-price"
+                type="number"
+                step="0.01"
+                min="0"
+                placeholder="0,00">
+
+            <label>Quantidade de itens</label>
+            <input
+                id="scanned-product-quantity"
+                type="number"
+                step="1"
+                min="1"
+                value="1"
+                placeholder="1">
+
+            <div class="modal-buttons">
+                <button type="button" onclick="closeScannedProductModal()" class="btn-modal-cancel">Cancelar</button>
+                <button type="button" onclick="addScannedProductToCart()">Adicionar</button>
             </div>
         </div>
     </div>
@@ -977,7 +1006,9 @@ class="cart-total-items">
 
 
 
-        <h3 class="section-title">
+    <div class="settings-card personal-data-card">
+
+        <h3>
             DADOS PESSOAIS
         </h3>
 
@@ -1044,6 +1075,8 @@ class="cart-total-items">
     </div>
 
 </div>
+
+    </div>
 
     <!-- PERSONALIZAÇÃO -->
 
