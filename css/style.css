@@ -961,6 +961,221 @@ button.btn-cart-barcode {
 }
 
 /* ==========================================================
+   SACOLA DE COMPRAS — PADRÃO DE MERCADO DIGITAL
+   ========================================================== */
+.cart-header > div:first-child {
+  min-width: 0;
+}
+
+.cart-header-actions {
+  flex: 0 0 auto !important;
+}
+
+.cart-subtitle {
+  margin-top: 6px;
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+}
+
+#cart-list {
+  gap: 12px;
+  margin: 4px 0 22px;
+}
+
+#cart-list li.cart-product-card {
+  display: block;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.cart-item-top,
+.cart-item-pricing,
+.cart-item-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.cart-item-top {
+  align-items: flex-start;
+}
+
+.cart-item-description {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+#cart-list .cart-item-name {
+  padding: 0;
+  color: var(--text);
+  font-size: 1rem;
+  line-height: 1.25;
+}
+
+#cart-list .cart-item-measure {
+  width: fit-content;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: var(--primary-light);
+  color: var(--primary-hover);
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+#cart-list .btn-delete {
+  flex: 0 0 34px;
+  width: 34px !important;
+  height: 34px !important;
+  padding: 0 !important;
+  border-radius: 50%;
+  color: #94a3b8 !important;
+  background: transparent !important;
+  font-size: 0.95rem;
+}
+
+#cart-list .btn-delete:hover {
+  color: var(--danger) !important;
+  background: var(--danger-light) !important;
+}
+
+.cart-item-pricing {
+  margin-top: 16px;
+  padding-top: 13px;
+  border-top: 1px solid var(--border);
+}
+
+.cart-item-pricing span {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+}
+
+.cart-item-pricing strong {
+  flex-shrink: 0;
+  color: var(--text);
+  font-size: 1rem;
+}
+
+.cart-item-actions {
+  margin-top: 14px;
+}
+
+.quantity-stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--background);
+}
+
+#cart-list .btn-qty {
+  width: 30px !important;
+  min-width: 30px;
+  height: 30px;
+  padding: 0;
+  border-radius: 9px;
+  background: var(--surface);
+  color: var(--primary);
+  box-shadow: none;
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+#cart-list .btn-qty:hover {
+  color: #ffffff;
+  background: var(--primary);
+  transform: none;
+}
+
+#cart-list .qty-value {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  color: var(--text);
+  font-size: 0.95rem;
+}
+
+.cart-item-quantity-label {
+  color: var(--text-secondary);
+  font-size: 0.76rem;
+}
+
+#cart-list li.cart-empty-state {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 8px;
+  padding: 34px 18px;
+  border: 1px dashed var(--border);
+  border-radius: 16px;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+.cart-empty-state i {
+  color: var(--primary);
+  font-size: 1.6rem;
+}
+
+.cart-empty-state strong {
+  color: var(--text);
+  font-size: 0.95rem;
+}
+
+.cart-empty-state span {
+  max-width: 260px;
+  font-size: 0.8rem;
+  line-height: 1.45;
+}
+
+.cart-footer {
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--primary-light);
+}
+
+.cart-footer .cart-total-row span {
+  font-size: 0.9rem;
+}
+
+.cart-footer #cart-total {
+  font-size: 1.5rem;
+}
+
+.product-measure-fields {
+  display: grid;
+  grid-template-columns: minmax(88px, 0.75fr) minmax(0, 1.25fr);
+  gap: 10px;
+  align-items: start;
+}
+
+.product-measure-fields .modal-unit-select {
+  margin: 0;
+}
+
+.product-measure-fields input {
+  min-width: 0;
+}
+
+.product-measure-help {
+  margin: 7px 0 2px !important;
+  color: var(--text-secondary);
+  font-size: 0.75rem !important;
+  line-height: 1.35;
+}
+
+/* ==========================================================
    08 - SETTINGS - CONFIGURAÇÃO/PERFIL DO USUARIO 
    ========================================================== */
 
@@ -1380,6 +1595,57 @@ button.btn-cart-barcode {
   margin: 5px 0 0;
   font-size: 12px;
   color: var(--text-secondary);
+}
+
+/* Os itens do histórico preservam a leitura da sacola: medida da embalagem,
+   preço unitário, quantidade e subtotal da linha. */
+.detail-product-list li.history-product-card {
+  display: block;
+  padding: 15px;
+  margin-bottom: 10px;
+}
+
+.history-item-top,
+.history-item-pricing {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.history-item-description {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.detail-product-list .history-item-measure {
+  width: fit-content;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: var(--primary-light);
+  color: var(--primary-hover);
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.detail-product-list .history-item-pricing {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.detail-product-list .history-item-pricing span {
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+}
+
+.detail-product-list .history-item-pricing strong {
+  flex-shrink: 0;
+  color: var(--text);
+  font-size: 0.95rem;
 }
 
 .history-total {
