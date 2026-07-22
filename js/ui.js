@@ -85,82 +85,103 @@ function showDrawDetails(product1, product2, unitPrice) {
 /* ==========================================================
    04 - RENDERIZAÇÃO DO CARRINHO
    ========================================================== */
-// Atualiza lista de produtos,
-// quantidade de itens e valor total
+function escapeHtml(value) {
+  const element = document.createElement("div");
+  element.textContent = value ?? "";
+  return element.innerHTML;
+}
+
+function formatQuantity(value) {
+  return new Intl.NumberFormat("pt-BR", {
+    maximumFractionDigits: 3,
+  }).format(value);
+}
+
+function getCartMeasureLabel(item, cartQuantity) {
+  const totalMeasure = Number(item.quantidade);
+  const measurePerItem =
+    Number.isFinite(totalMeasure) && totalMeasure > 0
+      ? totalMeasure / cartQuantity
+      : 1;
+  const unit = String(item.unidade || "un").toLowerCase();
+
+  if (unit === "un") {
+    const unitLabel = measurePerItem === 1 ? "unidade" : "unidades";
+    return `${formatQuantity(measurePerItem)} ${unitLabel}`;
+  }
+
+  const unitLabel = unit === "l" ? "L" : unit;
+  return `${formatQuantity(measurePerItem)} ${unitLabel}`;
+}
+
+// Atualiza lista de produtos, quantidades e valor total. Cada linha representa
+// uma embalagem/produto: medida por item, preço unitário e subtotal.
 function updateCartUI(cart, cartTotal) {
   const cartList = document.getElementById("cart-list");
-
   const cartTotalEl = document.getElementById("cart-total");
-
   const cartItemsCount = document.getElementById("cart-items-count");
 
   if (!cartList || !cartTotalEl) return;
 
   cartList.innerHTML = "";
 
-  cart.forEach((item, index) => {
+  if (!cart.length) {
+    cartList.innerHTML = `
+      <li class="cart-empty-state">
+        <i class="fa-solid fa-basket-shopping" aria-hidden="true"></i>
+        <strong>Sua sacola está vazia</strong>
+        <span>Adicione produtos para acompanhar o total da compra.</span>
+      </li>`;
+  }
+
+  cart.forEach((item) => {
     const li = document.createElement("li");
+    const quantity = Math.max(1, Number(item.quantidade_itens || 1));
+    const unitPrice = Number(item.preco_unitario);
+    const subtotal = Number(item.preco_total || 0);
+    const pricePerItem = Number.isFinite(unitPrice)
+      ? unitPrice
+      : subtotal / quantity;
+    const itemId = String(item.id);
+    const safeItemId = itemId.replace(/'/g, "\\'");
 
-    const quantidadeItens = Number(item.quantidade_itens || 1);
-
-    const mostrarLixeira = quantidadeItens === 1;
-
+    li.className = "cart-product-card";
     li.innerHTML = `
-
-<div class="cart-item-row">
-
-    <div class="cart-item-left">
-
-        <div class="cart-item-name">
-            ${item.nome}
+      <div class="cart-item-top">
+        <div class="cart-item-description">
+          <span class="cart-item-measure">${getCartMeasureLabel(item, quantity)} por item</span>
+          <strong class="cart-item-name">${escapeHtml(item.nome)}</strong>
         </div>
+        <button
+          class="btn-delete"
+          type="button"
+          aria-label="Remover ${escapeHtml(item.nome)} da sacola"
+          onclick="removeFromCart('${safeItemId}')">
+          <i class="fa-regular fa-trash-can" aria-hidden="true"></i>
+        </button>
+      </div>
 
-        <div class="item-price">
-            ${formatCurrency(Number(item.preco_total))}
+      <div class="cart-item-pricing">
+        <span>${quantity} ${quantity === 1 ? "unidade" : "unidades"} × ${formatCurrency(pricePerItem)}</span>
+        <strong>${formatCurrency(subtotal)}</strong>
+      </div>
+
+      <div class="cart-item-actions">
+        <div class="quantity-stepper" aria-label="Quantidade de ${escapeHtml(item.nome)}">
+          <button
+            class="btn-qty"
+            type="button"
+            aria-label="Diminuir quantidade"
+            onclick="decreaseItem('${safeItemId}')">−</button>
+          <span class="qty-value" aria-live="polite">${quantity}</span>
+          <button
+            class="btn-qty"
+            type="button"
+            aria-label="Aumentar quantidade"
+            onclick="increaseItem('${safeItemId}')">+</button>
         </div>
-
-    </div>
-
-    <div class="cart-item-right">
-
-        ${
-          mostrarLixeira
-            ? `
-            <button
-                class="btn-delete"
-                onclick="removeFromCart(${index})">
-                🗑️
-            </button>
-
-            <span class="qty-value">1</span>
-
-            <button
-                class="btn-qty"
-                onclick="increaseItem('${item.id}')">
-                +
-            </button>
-            `
-            : `
-            <button
-                class="btn-qty"
-                onclick="decreaseItem('${item.id}')">
-                −
-            </button>
-
-            <span class="qty-value">
-                ${quantidadeItens}
-            </span>
-
-            <button
-                class="btn-qty"
-                onclick="increaseItem('${item.id}')">
-                +
-            </button>
-            `
-        }
-    </div>
-</div>
-`;
+        <span class="cart-item-quantity-label">Quantidade</span>
+      </div>`;
     cartList.appendChild(li);
   });
 
@@ -172,7 +193,7 @@ function updateCartUI(cart, cartTotal) {
       0,
     );
 
-    cartItemsCount.textContent = `${totalItens} ${totalItens === 1 ? "item" : "itens"}`;
+    cartItemsCount.textContent = `${totalItens} ${totalItens === 1 ? "item na sacola" : "itens na sacola"}`;
   }
 }
 
