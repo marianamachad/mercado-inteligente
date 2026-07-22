@@ -153,7 +153,7 @@ async function obterOuCriarProduto(produto) {
 
 // Verifica se o usuário já possui o produto na lista.
 // Retorna o item encontrado ou null caso não exista.
-async function buscarItemExistente(produtoId) {
+async function buscarItemExistente(produtoId, produto = null) {
 
     // Obtém o usuário autenticado
     const user = (await supabaseClient.auth.getUser()).data.user;
@@ -163,15 +163,34 @@ async function buscarItemExistente(produtoId) {
         .from("itens_lista")
         .select("*")
         .eq("user_id", user.id)
-        .eq("produto_id", produtoId)
-        .maybeSingle();
+        .eq("produto_id", produtoId);
 
     if (error) {
         console.error(error);
         return null;
     }
 
-    return data;
+    if (!data || data.length === 0 || !produto) return data?.[0] || null;
+
+    const precoUnitario = Number(produto.price);
+    const medidaPorItem = Number(
+        produto.rawQuantity ?? produto.quantity ?? 1
+    );
+    const unidade = String(produto.unit || "un").toLowerCase();
+
+    // Só agrupa itens que realmente representam a mesma embalagem e o mesmo
+    // preço unitário. Assim, uma Coca-Cola de 2 L não se mistura com uma lata
+    // ou com um valor diferente na mesma linha da sacola.
+    return data.find((item) => {
+        const itensNaLinha = Math.max(1, Number(item.quantidade_itens || 1));
+        const medidaDaLinha = Number(item.quantidade || 0) / itensNaLinha;
+
+        return (
+            String(item.unidade || "un").toLowerCase() === unidade &&
+            Math.abs(Number(item.preco_unitario) - precoUnitario) < 0.00001 &&
+            Math.abs(medidaDaLinha - medidaPorItem) < 0.00001
+        );
+    }) || null;
 }
 
 /* ==========================================================
@@ -184,14 +203,14 @@ async function buscarItemExistente(produtoId) {
 async function adicionarItemCarrinho(produto) {
 
     const quantidadeDoCarrinho = Number(produto.cartQuantity ?? 1);
-    const quantidadeDoProduto = Number(produto.rawQuantity ?? produto.quantity ?? 1);
+    const quantidadePorItem = Number(produto.rawQuantity ?? produto.quantity ?? 1);
     const precoPorItem = Number(produto.price);
 
     if (
         !Number.isInteger(quantidadeDoCarrinho) ||
         quantidadeDoCarrinho < 1 ||
-        !Number.isFinite(quantidadeDoProduto) ||
-        quantidadeDoProduto <= 0 ||
+        !Number.isFinite(quantidadePorItem) ||
+        quantidadePorItem <= 0 ||
         !Number.isFinite(precoPorItem) ||
         precoPorItem < 0
     ) {
@@ -208,7 +227,7 @@ async function adicionarItemCarrinho(produto) {
     }
 
     // Verifica se o produto já está no carrinho
-    const itemExistente = await buscarItemExistente(produtoId);
+    const itemExistente = await buscarItemExistente(produtoId, produto);
 
     // Obtém o usuário autenticado
     const {
@@ -232,7 +251,7 @@ async function adicionarItemCarrinho(produto) {
 
                 quantidade:
                     Number(itemExistente.quantidade) +
-                    quantidadeDoProduto,
+                    (quantidadePorItem * quantidadeDoCarrinho),
 
                 quantidade_itens:
                     Number(itemExistente.quantidade_itens || 1) + quantidadeDoCarrinho,
@@ -258,7 +277,7 @@ async function adicionarItemCarrinho(produto) {
                 nome: produto.name,
                 preco_total: precoPorItem * quantidadeDoCarrinho,
                 preco_unitario: precoPorItem,
-                quantidade: quantidadeDoProduto,
+                quantidade: quantidadePorItem * quantidadeDoCarrinho,
                 quantidade_itens: quantidadeDoCarrinho,
                 unidade: produto.unit,
                 produto_id: produtoId
@@ -520,20 +539,22 @@ async function removerItemCarrinho(id) {
 let itemToDelete = null;
 
 // Abre o modal de confirmação
-function removeFromCart(index) {
+function removeFromCart(itemId) {
 
     // A confirmação de esvaziar a sacola é atribuída pelo app.js via
     // onclick. Ao excluir um único item, remove essa ação anterior para
     // que somente o listener abaixo seja executado.
     modalConfirmBtn.onclick = null;
 
-    itemToDelete = cart[index];
+    itemToDelete = cart.find((item) => String(item.id) === String(itemId));
+
+    if (!itemToDelete) return;
 
     const itemName =
-        cart[index].nome || cart[index].name;
+        itemToDelete.nome || itemToDelete.name;
 
-    modalMessage.innerHTML =
-        `Certeza que deseja excluir <strong>"${itemName}"</strong>?`;
+    modalMessage.textContent =
+        `Certeza que deseja excluir "${itemName}"?`;
 
     customModal.classList.remove("hidden");
 
